@@ -1,18 +1,18 @@
 class User
 {
-   String userName;
-   int    userID;
+   private final String userName;
+   private final int    userID;
 
    ///////////////////////////////////////////////////////////
    ///////////////////////////////////////////////////////////
-   String getUserName()
+   public String getUserName()
    {
       return userName;
    }
 
    ///////////////////////////////////////////////////////////
    ///////////////////////////////////////////////////////////
-   int getUserID()
+   public int getUserID()
    {
       return userID;
    }
@@ -23,5 +23,6 @@ class User
    {
       this.userID   = id;
       this.userName = name;
+      UserData.incrementAmountOfUsers();
    }
 }
