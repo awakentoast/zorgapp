@@ -15,7 +15,6 @@ public class PrintToScreen {
         System.out.format("%d:  Add a patient\\patients\n", 6);
         System.out.format("%d:  Remove a patient\n\n", 7);
         System.out.print("enter #choice: ");
-        System.out.println("gitgitgitgit");
     }
 
     public static void printSwapPatient() {
