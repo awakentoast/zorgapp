@@ -1,3 +1,6 @@
+/**
+ * @author luukb
+ */
 public class PrintToScreen {
 
     private PrintToScreen() {throw new IllegalStateException("Utility class");} //good practice according to sonarlint
@@ -12,7 +15,6 @@ public class PrintToScreen {
         System.out.format("%d:  Add a patient\\patients\n", 6);
         System.out.format("%d:  Remove a patient\n\n", 7);
         System.out.print("enter #choice: ");
-        System.out.println("change for gitigitigitigti");
     }
 
     public static void printSwapPatient() {

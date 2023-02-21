@@ -69,8 +69,6 @@ class Administration {
          i++;
       }
 
-      System.out.println();
-
       int patientToSwitchTo = HandyMethods.correctInput(1, PatientData.getAmountOfPatients(), bScan.nextInt());
 
       currentPatient = PatientData.getPatientData().get(patientToSwitchTo - 1);
