@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Set;
 
 public class HandyMethods {
-    private HandyMethods() {throw new IllegalStateException("Utility class");} // can't make an object from HandyMethods, as it's an utility class
+    private HandyMethods() {throw new IllegalStateException("Utility class");} // can't make an object from HandyMethods, as it's a utility class
 
     private static final BScanner bScan = new BScanner();
 
@@ -29,7 +29,8 @@ public class HandyMethods {
         }
     }
 
-    public static int[] convertNumbersToArray(String str) {
+    //zet een string met nummers gedeeld door komma's in een int array, de string moet altijd eerst door validPhrase zodat je deze functie altijd werkt
+    public static int[] convertStringNumbersToArray(String str) {
         String[] numbersString = str.split(",");
         int[] numbers = new int[numbersString.length];
         for (int i = 0; i < numbersString.length; i++) {
@@ -37,9 +38,12 @@ public class HandyMethods {
         } return numbers;
     }
 
+    //checks if al the numbers in the array are in the given range, if not make them re-enter them.
+    //also check if 0 and upper range from swap patient data are in an array with multiple digits, and makes them re-enter digits
     public static int[] correctInputs(int lowerBound, int higherBound, int[] numbers) {
         while (true) {
             if (numbers.length == 1 && numbers[0] <= higherBound + 1 && numbers[0] >= lowerBound) {
+                System.out.println("a");
                 return numbers;
             }
             int correct = 0;
@@ -48,18 +52,19 @@ public class HandyMethods {
                     correct++;
                 }
             }
-            if (Arrays.stream(numbers).anyMatch(i -> i == 6) || Arrays.stream(numbers).anyMatch(i -> i == 0)) {
+            if (Arrays.stream(numbers).anyMatch(i -> i == higherBound + 1) || Arrays.stream(numbers).anyMatch(i -> i == 0) && numbers.length != 1) {
                 System.out.println("You can't choose return and change everything with other options/digits");
-                System.out.format("please choose a new digits/new digits not containing 0 or %d in combination with other digits\n", higherBound + 1);
+                System.out.format("please   choose a new digits/new digits not containing 0 or %d in combination with other digits\n", higherBound + 1);
             }
             else if (correct == numbers.length) {return numbers;}
             else {
                 System.out.println("please enter valid digit/digits");
             }
-            numbers = convertNumbersToArray(validPhrase((bScan.nextLine())));
+            numbers = convertStringNumbersToArray(validPhrase((bScan.nextLine())));
         }
     }
 
+    //check if it falls in between bounds
     public static int correctInput(int lowerBound, int higherBound, int number) {
         while (true) {
             if (number >= lowerBound && number <= higherBound) return number;
@@ -68,5 +73,32 @@ public class HandyMethods {
                 number = bScan.nextInt();
             }
         }
+    }
+
+    //this method takes the input, and applies all the functions to it
+    public static int[] stringToNumbers(String str, int lowerbound, int highestValue) {
+
+        int lengthStr = str.length();
+        int[] intArray = new int[lengthStr / 2 + 1];
+
+        //if change all patient data or delete all patients has been chosen, fill the fieldsToBeChanged array with all the options
+        if (lengthStr == 1 && Integer.parseInt(str) == highestValue + 1) {
+
+            intArray[0] = Integer.parseInt(str);
+
+            int[] tempArray = new int[highestValue];
+
+            for (int i = 0; i < highestValue; i++) {
+                tempArray[i] = i + 1;
+            }
+
+            intArray = Arrays.copyOf(tempArray, highestValue);
+
+        }
+        else {
+            intArray = HandyMethods.convertStringNumbersToArray(str);
+            intArray = HandyMethods.correctInputs(lowerbound, highestValue, intArray);
+        }
+        return  intArray;
     }
 }

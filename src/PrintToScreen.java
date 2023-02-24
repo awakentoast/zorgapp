@@ -11,9 +11,9 @@ public class PrintToScreen {
         System.out.format("%d:  Change User\n", 2);
         System.out.format("%d:  Change Patient\n", 3);
         System.out.format("%d:  Change current Patient Data\n", 4);
-        System.out.format("%d:  Add an user\\users\n", 5);
-        System.out.format("%d:  Add a patient\\patients\n", 6);
-        System.out.format("%d:  Remove a patient\n\n", 7);
+        System.out.format("%d:  Add an user/users\n", 5);
+        System.out.format("%d:  Add a patient/patients\n", 6);
+        System.out.format("%d:  Remove a patient/patients\n\n", 7);
         System.out.print("enter #choice: ");
     }
 

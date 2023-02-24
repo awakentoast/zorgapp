@@ -1,5 +1,5 @@
-   import java.time.LocalDate;
-   import java.util.*;
+import java.time.LocalDate;
+import java.util.Objects;
 
    ///////////////////////////////////////////////////////////////////////////
    // class Administration represents the core of the application by showing
@@ -33,51 +33,61 @@ class Administration {
    static final int LENGTH      = 5;
 
 
-   private static User currentUser = UserData.initialUsers().get(0);
-   private static Patient currentPatient = PatientData.initialPatients().get(0);
+   private static User currentUser = UserData.getUserData().get(0);
+   private static Patient currentPatient = PatientData.getPatientData().get(0);
    private static final BScanner bScan = new BScanner();
 
-//      Administration(User user) {
-//
-//      }
 
    private static void swapUser() {
-      System.out.println();
-      System.out.println("What user do you want to switch to?");
+      if (UserData.getAmountOfUsers() != 0) {
 
-      int i = 1;
-      for (User user : UserData.getUserData()) {
-         System.out.printf("%d: %s \n", i, user.getUserName());
-         i++;
+         System.out.println();
+         System.out.println("What user do you want to switch to?");
+         System.out.println("0: Return");
+
+         int i = 1;
+         for (User user : UserData.getUserData()) {
+            System.out.printf("%d: %s \n", i, user.getUserName());
+            i++;
+         }
+         System.out.println();
+         System.out.print("Enter #choice: ");
+
+         int userToSwitchTo = HandyMethods.correctInput(1, UserData.getAmountOfUsers(), bScan.nextInt());
+         if (userToSwitchTo != 0) {
+            currentUser = UserData.getUserData().get(userToSwitchTo - 1);
+         }
+
+         System.out.println();
       }
-      System.out.println();
-      System.out.print("Enter #choice: ");
-
-      int userToSwitchTo = HandyMethods.correctInput(1, UserData.getAmountOfUsers(), bScan.nextInt());
-      currentUser = UserData.getUserData().get(userToSwitchTo - 1);
-
-      System.out.println();
+      else {System.out.println("There are no users, first add more users");}
       }
 
    private static void swapPatient() {
-      System.out.println();
-      System.out.println("What patient do you want to switch to?");
+      if (PatientData.getAmountOfPatients() != 0) {
+         System.out.println();
+         System.out.println("What patient do you want to switch to?\n");
 
-      int i = 1;
-      for (Patient patient : PatientData.getPatientData()) {
-         System.out.printf("%d: %s \n", i, patient.fullName());
-         i++;
+         System.out.println("0: Return");
+         int i = 1;
+         for (Patient patient : PatientData.getPatientData()) {
+            System.out.printf("%d: %s \n", i, patient.fullName());
+            i++;
+         }
+         System.out.println();
+         System.out.print("Enter choice:");
+
+         int patientToSwitchTo = HandyMethods.correctInput(1, PatientData.getAmountOfPatients(), bScan.nextInt());
+
+         if (patientToSwitchTo != 0) {
+            currentPatient = PatientData.getPatientData().get(patientToSwitchTo - 1);
+         }
+         System.out.println();
       }
-
-      int patientToSwitchTo = HandyMethods.correctInput(1, PatientData.getAmountOfPatients(), bScan.nextInt());
-
-      currentPatient = PatientData.getPatientData().get(patientToSwitchTo - 1);
-      System.out.println();
+      else {System.out.println("There are no patients, first add more patients");}
    }
 
    private static void changePatientData() {
-
-      int highestValue = LENGTH;
 
       //prints the choices for the user
       PrintToScreen.printSwapPatient();
@@ -85,25 +95,7 @@ class Administration {
       //prevents for anything but integers and 1,2 integers being passed along
       String str = HandyMethods.validPhrase(bScan.nextLine());
 
-      int lengthStr = str.length();
-      int[] fieldsToBeChanged = new int[lengthStr / 2 + 1];
-
-
-      if (lengthStr == 1) {
-         fieldsToBeChanged[0] = Integer.parseInt(str);
-         //if 6 has been chosen, fill the fieldsToBeChanged array with all the options
-         if (fieldsToBeChanged[0] == highestValue + 1) {
-            int[] tempArray = new int[highestValue];
-            for (int i = 0; i < highestValue; i++) {
-               tempArray[i] = i + 1;
-            }
-            fieldsToBeChanged = Arrays.copyOf(tempArray, highestValue);
-         }
-      } else {
-         fieldsToBeChanged = HandyMethods.convertNumbersToArray(str);
-         fieldsToBeChanged = HandyMethods.correctInputs(0, highestValue, fieldsToBeChanged);
-      }
-
+      int[] fieldsToBeChanged = HandyMethods.stringToNumbers(str, 0, LENGTH);
 
       for (int fieldToBeChanged : fieldsToBeChanged) {
          switch (fieldToBeChanged) {
@@ -174,17 +166,32 @@ class Administration {
    }
 
    private static void deletePatients() {
-      System.out.println();
-      System.out.println("which patients would you like to delete, only choose 1 digit:");
-      int i = 1;
-      for (Patient patient : PatientData.getPatientData()) {
-         System.out.printf("%d: %s \n", i, patient.fullName());
-         i++;
-      }
-      System.out.println("enter #choice(s)");
-      int deletedPatient = HandyMethods.correctInput(1, PatientData.getAmountOfPatients(), bScan.nextInt());
 
-      PatientData.deletePatient(deletedPatient);
+      System.out.println("Type the corresponding number(s) of the data you would like to change; if there are multiple numbers, divide them with a comma ex. 1,2,3:\n");
+
+      System.out.println("0: Return");
+      int x = 1;
+      for (Patient patient : PatientData.getPatientData()) {
+         System.out.printf("%d: %s \n", x, patient.fullName());
+         x++;
+      }
+      System.out.format("%d: All patients\n\n", PatientData.getAmountOfPatients() + 1);
+      System.out.print("Enter #choice:");
+
+      String str = HandyMethods.validPhrase(bScan.nextLine());
+      if (!Objects.equals(str, "0")) {
+         int[] usersToBeDeleted = HandyMethods.stringToNumbers(str, 0, PatientData.getAmountOfPatients());
+
+         for( int i = 0; i < usersToBeDeleted.length/2; ++i ) {
+            int temp = usersToBeDeleted[i];
+            usersToBeDeleted[i] = usersToBeDeleted[usersToBeDeleted.length - i - 1];
+            usersToBeDeleted[usersToBeDeleted.length - i - 1] = temp;
+         }
+
+         for (int k : usersToBeDeleted) {
+            PatientData.deletePatient(k);
+         }
+      }
    }
 
    static void menu() {
@@ -194,7 +201,7 @@ class Administration {
          System.out.format( "%s\n", "-".repeat( 35 ) );
          System.out.format("Current patient: %s\n", currentPatient.fullName());
 
-         // prints the current user, the current patient and the choices the user has
+         //the choices the user has
          PrintToScreen.printStart();
 
          int choice = bScan.nextInt();

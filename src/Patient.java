@@ -2,13 +2,14 @@ import java.time.LocalDate;
 
 class Patient
 {
-   static final int RETURN      = 0;
-   static final int SURNAME     = 1;
-   static final int FIRSTNAME   = 2;
-   static final int DATEOFBIRTH = 3;
-   static final int AGE         = 4;
-   static final int WEIGHT      = 5;
-   static final int LENGTH      = 6;
+   // not used
+//   static final int RETURN      = 0;
+//   static final int SURNAME     = 1;
+//   static final int FIRSTNAME   = 2;
+//   static final int DATEOFBIRTH = 3;
+//   static final int AGE         = 4;
+//   static final int WEIGHT      = 5;
+//   static final int LENGTH      = 6;
 
    private final int id;
    private String    surname;
@@ -60,10 +61,10 @@ class Patient
    public void setLength(double length) {
       this.length = length;
    }
-   public void setWeight(double w) {weight = w;}
+   public void setWeight(double weight) {this.weight = weight;}
    public void setDateOfBirth(LocalDate born) {
-      dateOfBirth = born;
-      age = HandyMethods.calcAge(dateOfBirth);
+      this.dateOfBirth = born;
+      this.age = HandyMethods.calcAge(dateOfBirth);
    }
-   public void setFirstName(String firstname) {firstName = firstname;}
+   public void setFirstName(String firstname) {this.firstName = firstname;}
 }
