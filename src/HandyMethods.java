@@ -54,7 +54,7 @@ public class HandyMethods {
             //checks for upperbound and lowerbound in array
             if (Arrays.stream(numbers).anyMatch(i -> i == higherBound + 1) || Arrays.stream(numbers).anyMatch(i -> i == 0) && numbers.length != 1) {
                 System.out.println("You can't choose return and change everything with other options/digits");
-                System.out.format("please   choose a new digits/new digits not containing 0 or %d in combination with other digits\n", higherBound + 1);
+                System.out.format("please choose a new digits/new digits not containing 0 or %d in combination with other digits\n", higherBound + 1);
             }
             else if (correct == numbers.length) {return numbers;}
             else {

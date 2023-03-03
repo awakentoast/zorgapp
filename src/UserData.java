@@ -1,12 +1,12 @@
 import java.util.ArrayList;
 
 public class UserData {
-
-    private ArrayList<User> allUsers = new ArrayList<>();
     private int amountOfUsers = 0;
     private final String[] occupations = {"General Practitioner", "Dentist", "Physical Therapist"};
     private final boolean[] allowedMedicationEditings = {true, false, false};
     private final boolean[] allowedMedicationInsights = {true, true, false};
+
+    private ArrayList<User> allUsers = new ArrayList<>();
 
     public boolean getAllowedMedicationEditing(int index) {
         return allowedMedicationEditings[index - 1];

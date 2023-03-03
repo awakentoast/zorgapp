@@ -6,7 +6,7 @@ public class MedicationData {
     private int amountOfMedication = 0;
 
     public MedicationData() {
-        // TODO document why this constructor is empty
+        //TODO document why this constructor is empty
     }
 
     public ArrayList<Medication> getAllMedicationData() {

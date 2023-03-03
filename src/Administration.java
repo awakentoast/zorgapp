@@ -149,13 +149,33 @@ class Administration {
                currentPatient.setDateOfBirth(bScan.nextDate(bScan.nextLine()));
             }
             case WEIGHT -> {
-               System.out.println("What do you want the weight to be? (kg)");
-               currentPatient.setWeight(bScan.nextDouble());
+               double weight = 0;
+               boolean validWeight = true;
+               String askForWeight = "What do you want the new weight of the patient to be? (kg)";
+               while (validWeight) {
+                  System.out.println(askForWeight);
+                  weight = bScan.nextDouble();
+                  if (weight > 0) {
+                     validWeight = false;
+                     askForWeight += " weight can't be 0 or less!";
+                  }
+               } currentPatient.setWeight(weight);
             }
+
             case LENGTH -> {
-               System.out.println("What do you want the new length to be? (cm)");
-               currentPatient.setLength(bScan.nextDouble());
+               double length = 0;
+               boolean validLength = true;
+               String askForLength = "What do you want the length of the new patient to be? (cm)";
+               while (validLength) {
+                  System.out.println(askForLength);
+                  length = bScan.nextDouble();
+                  if (length > 0) {
+                     validLength = false;
+                     askForLength += " length can't be 0 or less!";
+                  }
+               } currentPatient.setLength(length);
             }
+
             default -> {
                System.out.println(fieldToBeChanged);
                System.out.println("you made an oopsie :3");
@@ -187,10 +207,11 @@ class Administration {
                   System.out.format("%d: %s", occupationCount, occupation);
                }
 
-               String occupation = allUsers.getOccupation(HandyMethods.correctInput(1, allUsers.getAmountOfOccupations(), bScan.nextInt()));
-               int indexOfOccupation = Arrays.asList(allUsers.getOccupations()).indexOf(occupation) + 1;
 
-               allUsers.addUser(new User(size / 2 + i + 1, firstname + " " + surname, occupation, allUsers.getAllowedMedicationEditing(indexOfOccupation), allUsers.getAllowedMedicationInsight(indexOfOccupation)));
+               int occupationIndex = HandyMethods.correctInput(1, allUsers.getAmountOfOccupations(), bScan.nextInt()) + 1;
+
+
+               allUsers.addUser(new User(size / 2 + i + 1, firstname + " " + surname, allUsers.getOccupation(occupationIndex), allUsers.getAllowedMedicationEditing(occupationIndex), allUsers.getAllowedMedicationInsight(occupationIndex)));
             }
 
             System.out.println();
@@ -225,9 +246,6 @@ class Administration {
       if (Objects.equals(yesOrNo, "yes") || Objects.equals(yesOrNo, "Yes") || Objects.equals(yesOrNo, "YES")) {
 
          if (amountOfAddedPatients != 0) {
-            double length = 0;
-            double weight = 0;
-
             for (int i = 1; i <= amountOfAddedPatients; i++) {
                System.out.println();
                System.out.format("New Patient [%d]:\n", size + i);
@@ -241,21 +259,27 @@ class Administration {
                System.out.println("What do you want the birthdate of the patient to be? [YYYY-MM-DD]");
                LocalDate born = bScan.nextDate(bScan.nextLine());
 
+               double weight = 0;
                boolean validWeight = true;
+               String askForWeight = "What do you want the weight of the new patient to be? (kg)";
                while (validWeight) {
-                  System.out.println("What do you want the weight of the new patient to be? (kg)");
+                  System.out.println(askForWeight);
                   weight = bScan.nextDouble();
                   if (weight > 0) {
                      validWeight = false;
+                     askForWeight += " weight can't be 0 or less!";
                   }
                }
 
+               double length = 0;
                boolean validLength = true;
+               String askForLength = "What do you want the length of the new patient to be? (cm)";
                while (validLength) {
-                  System.out.println("What do you want the length of the new patient to be? (cm)");
+                  System.out.println(askForLength);
                   length = bScan.nextDouble();
                   if (length > 0) {
                      validLength = false;
+                     askForLength += " length can't be 0 or less!";
                   }
                }
 
@@ -307,7 +331,6 @@ class Administration {
       }
    }
 
-
    private void deletePatients() {
 
       System.out.println("Type the corresponding number(s) of the data you would like to change; if there are multiple numbers, divide them with a comma ex. 1,2,3:\n");
@@ -347,7 +370,7 @@ class Administration {
    }
 
    private void addMedication() {
-      if (!currentUser.getMedicationEditing()) {
+      if (!currentUser.getMedicationEditingAuthorization()) {
          System.out.println("You are not authorized to add medication\n");
       } else {
          System.out.println("What medication would you like to add? Type the corresponding number(s) of the medication you would like to change; if there are multiple numbers, divide them with a comma ex. 4,5,6 (you cant choose 0 and \"all of them\" with other digits):\n");
@@ -376,7 +399,7 @@ class Administration {
    }
 
    private void changeMedicationDosage() {
-      if (!currentUser.getMedicationEditing()){
+      if (!currentUser.getMedicationEditingAuthorization()){
          System.out.println("You are not authorized to change or edit medication");
       }
       else {
@@ -396,7 +419,7 @@ class Administration {
             int medicationToBeChanged = bScan.nextInt();
             medicationToBeChanged = HandyMethods.correctInput(0, currentPatient.getMedicationList().getAmountOfMedication(), medicationToBeChanged);
 
-            System.out.println("What do you want the new dosage to be?");
+            System.out.println("\nWhat do you want the new dosage to be?");
             String newDosage = bScan.nextLine();
             currentPatient.getMedicationList().changeMedicationDosage(medicationToBeChanged, newDosage);
          } else {
@@ -415,13 +438,13 @@ class Administration {
          System.out.format("Current patient: %s\n", currentPatient.fullName());
 
          //the choices the user has
-         PrintToScreen.printStart();
+         PrintToScreen.printStart(currentUser.getMedicationEditingAuthorization());
 
          int choice = bScan.nextInt();
          switch (choice) {
             case STOP -> nextCycle = false; // interrupt the loop
 
-            case VIEW -> currentPatient.viewData(allUsers.getAllowedMedicationInsight(Arrays.asList(allUsers.getOccupations()).indexOf(currentUser.getOccupation()) + 1));
+            case VIEW -> currentPatient.viewData(currentUser.getMedicationInsightAuthorization());
 
             case SWAP_USER -> swapUser();
 

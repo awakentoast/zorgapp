@@ -23,16 +23,15 @@ class User
       return occupation;
    }
 
-   public boolean getMedicationEditing() {
+   public boolean getMedicationEditingAuthorization() {
       return medicationEditing;
    }
 
-   public boolean getMedicationInsight() {
+   public boolean getMedicationInsightAuthorization() {
       return medicationInsight;
    }
 
    public User(int id, String name, String occupation, boolean medicationEditing, boolean medicationInsight) {
-
       this.userID = id;
       this.userName = name;
       this.occupation = occupation;

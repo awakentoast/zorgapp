@@ -1,7 +1,4 @@
-import javax.swing.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Objects;
 
 
 class Patient
@@ -59,15 +56,16 @@ class Patient
       System.out.format("%-17s %.1f\n", "bmi:", weight / ((length / 100) * (length / 100)));
 
       if (!Insight) {
-         System.out.println("Medications:\nYou don't get to view medication data\n");
+         System.out.println("Medications:\nYou don't have authorization the to view medication data\n");
       }
       else{
-         System.out.println("medications:");
+         System.out.println("\nMedications:");
          if (medicationList.getAmountOfMedication() == 0) {
             System.out.println("no current medication administered");
          } else {
             for (Medication medication : medicationList.getAllMedicationData()) {
                System.out.println("  - " + medication.getSubstance());
+               System.out.println("     -" + medication.getDose());
             }
          }
          System.out.println();

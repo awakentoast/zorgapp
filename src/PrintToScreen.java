@@ -4,7 +4,7 @@
 public class PrintToScreen {
 
     private PrintToScreen() {throw new IllegalStateException("Utility class");} //good practice according to sonarlint
-    public static void printStart() {
+    public static void printStart(boolean ChangeMedication) {
         System.out.println();
         System.out.format("%d:  STOP\n", 0);
         System.out.format("%d:  View patient data\n", 1);
@@ -14,10 +14,14 @@ public class PrintToScreen {
         System.out.format("%d:  Add an user/users\n", 5);
         System.out.format("%d:  Add a patient/patients\n", 6);
         System.out.format("%d:  Remove a patient/patients\n", 7);
-        System.out.format("%d:  Add medication\n", 8);
-        System.out.format("%d:  Change medication dosage\n", 9);
-        System.out.format("%d:  Delete medication from patient\n\n", 10);
-        System.out.print("enter #choice: ");
+
+        if (ChangeMedication) {
+            System.out.format("%d:  Add medication\n", 8);
+            System.out.format("%d:  Change medication dosage\n", 9);
+            System.out.format("%d:  Delete medication from patient\n", 10);
+        }
+
+        System.out.print("\nEnter #choice: ");
     }
 
     public static void printSwapPatient() {
@@ -29,7 +33,7 @@ public class PrintToScreen {
         System.out.format("%d:  Date of Birth\n", 3);
         System.out.format("%d:  Weight\n", 4);
         System.out.format("%d:  Length\n", 5);
-        System.out.format("%d:  Everything\n\n", 6);
-        System.out.print("enter #choice: ");
+        System.out.format("%d:  Everything\n", 6);
+        System.out.print("\nEnter #choice: ");
     }
 }
