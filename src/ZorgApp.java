@@ -3,11 +3,8 @@ import java.lang.reflect.AnnotatedArrayType;
 class ZorgApp
 {   public static void main( String[] args )
    {
-      //initialize users and patients
-      UserData.initialUsers();
-      PatientData.initialPatients();
-
+      Administration administration = new Administration();
       //hier loopt de hele loop van het programma
-      Administration.menu();
+      administration.menu();
    }
 }

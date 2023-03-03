@@ -7,13 +7,16 @@ public class PrintToScreen {
     public static void printStart() {
         System.out.println();
         System.out.format("%d:  STOP\n", 0);
-        System.out.format("%d:  View Patient Data\n", 1);
-        System.out.format("%d:  Change User\n", 2);
-        System.out.format("%d:  Change Patient\n", 3);
-        System.out.format("%d:  Change current Patient Data\n", 4);
+        System.out.format("%d:  View patient data\n", 1);
+        System.out.format("%d:  Change user\n", 2);
+        System.out.format("%d:  Change patient\n", 3);
+        System.out.format("%d:  Change current patient data\n", 4);
         System.out.format("%d:  Add an user/users\n", 5);
         System.out.format("%d:  Add a patient/patients\n", 6);
-        System.out.format("%d:  Remove a patient/patients\n\n", 7);
+        System.out.format("%d:  Remove a patient/patients\n", 7);
+        System.out.format("%d:  Add medication\n", 8);
+        System.out.format("%d:  Change medication dosage\n", 9);
+        System.out.format("%d:  Delete medication from patient\n\n", 10);
         System.out.print("enter #choice: ");
     }
 

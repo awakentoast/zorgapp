@@ -43,7 +43,6 @@ public class HandyMethods {
     public static int[] correctInputs(int lowerBound, int higherBound, int[] numbers) {
         while (true) {
             if (numbers.length == 1 && numbers[0] <= higherBound + 1 && numbers[0] >= lowerBound) {
-                System.out.println("a");
                 return numbers;
             }
             int correct = 0;
@@ -52,6 +51,7 @@ public class HandyMethods {
                     correct++;
                 }
             }
+            //checks for upperbound and lowerbound in array
             if (Arrays.stream(numbers).anyMatch(i -> i == higherBound + 1) || Arrays.stream(numbers).anyMatch(i -> i == 0) && numbers.length != 1) {
                 System.out.println("You can't choose return and change everything with other options/digits");
                 System.out.format("please   choose a new digits/new digits not containing 0 or %d in combination with other digits\n", higherBound + 1);

@@ -1,9 +1,8 @@
+import java.io.BufferedReader;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Scanner;
-
-
 
 ///////////////////////////////////////////////////////////////////////////////////
 // BScanner is a scanner class, wrapping the java.util.Scanner, providing a bit more
@@ -31,11 +30,11 @@ class BScanner
 
    ////////////////////////////////////////////////////////////////////////////////
    ////////////////////////////////////////////////////////////////////////////////
-   public BScanner( String arg )
-   {
-      scanner = new Scanner( arg );
-      scanner.useLocale( Locale.US );
-   }
+//   public BScanner( String arg )
+//   {
+//      scanner = new Scanner( arg );
+//      scanner.useLocale( Locale.US );
+//   }
 
    ////////////////////////////////////////////////////////////////////////////////
    ////////////////////////////////////////////////////////////////////////////////
@@ -87,18 +86,18 @@ class BScanner
    ////////////////////////////////////////////////////////////////////////////////
    public String nextLine()
    {
-      String r;
+      String r = null;
 
       while (true)
       {
          try
          {
-            r = scanner.next();
+            r = scanner.useDelimiter("\n").next();
             break;
          }
          catch (Exception e)
          {
-            System.out.println( "please enter a string (ws allowed)" );
+            System.out.println("please enter valid input");
          }
          scanner.next();
       }

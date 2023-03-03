@@ -2,6 +2,10 @@ class User
 {
    private final String userName;
    private final int    userID;
+   private final String occupation;
+   private final boolean medicationEditing;
+   private final boolean medicationInsight;
+
 
    ///////////////////////////////////////////////////////////
    ///////////////////////////////////////////////////////////
@@ -15,11 +19,24 @@ class User
       return userID;
    }
 
+   public String getOccupation() {
+      return occupation;
+   }
 
-   public User( int id, String name )
-   {
-      this.userID   = id;
+   public boolean getMedicationEditing() {
+      return medicationEditing;
+   }
+
+   public boolean getMedicationInsight() {
+      return medicationInsight;
+   }
+
+   public User(int id, String name, String occupation, boolean medicationEditing, boolean medicationInsight) {
+
+      this.userID = id;
       this.userName = name;
-      UserData.incrementAmountOfUsers();
+      this.occupation = occupation;
+      this.medicationEditing = medicationEditing;
+      this.medicationInsight = medicationInsight;
    }
 }

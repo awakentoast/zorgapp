@@ -1,15 +1,21 @@
+import javax.swing.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Objects;
+
 
 class Patient
 {
-   // not used
-//   static final int RETURN      = 0;
-//   static final int SURNAME     = 1;
-//   static final int FIRSTNAME   = 2;
-//   static final int DATEOFBIRTH = 3;
-//   static final int AGE         = 4;
-//   static final int WEIGHT      = 5;
-//   static final int LENGTH      = 6;
+   /*
+   not used
+   static final int RETURN      = 0;
+   static final int SURNAME     = 1;
+   static final int FIRSTNAME   = 2;
+   static final int DATEOFBIRTH = 3;
+   static final int AGE         = 4;
+   static final int WEIGHT      = 5;
+   static final int LENGTH      = 6;
+*/
 
    private final int id;
    private String    surname;
@@ -18,12 +24,16 @@ class Patient
    private int       age;
    private double    weight;
    private double    length;
+   private MedicationData medicationList;
+   // private MedicationData medicationList = new MedicationData();
+
+   MedicationData medicationData = new MedicationData();
 
 
    ////////////////////////////////////////////////////////////////////////////////
    // Constructor
    ////////////////////////////////////////////////////////////////////////////////
-   Patient(int id, String surname, String firstName, LocalDate dateOfBirth, int age, double weight, double length) {
+   Patient(int id, String surname, String firstName, LocalDate dateOfBirth, int age, double weight, double length, MedicationData medicationList) {
       this.id = id;
       this.surname = surname;
       this.firstName = firstName;
@@ -31,14 +41,13 @@ class Patient
       this.age = age;
       this.weight = weight;
       this.length = length;
-      PatientData.incrementAmountOfPatients();
+      this.medicationList = medicationList;
    }
 
    ////////////////////////////////////////////////////////////////////////////////
    // Display patient data.
    ////////////////////////////////////////////////////////////////////////////////
-   void viewData()
-   {
+   void viewData(boolean Insight) {
       System.out.println();
       System.out.format("======== Patient id=%d ========\n", id);
       System.out.format("%-17s %s\n", "Surname:", surname);
@@ -48,7 +57,21 @@ class Patient
       System.out.format("%-17s %.1f\n", "Weight: ", weight);
       System.out.format("%-17s %.1f\n", "Length:", length);
       System.out.format("%-17s %.1f\n", "bmi:", weight / ((length / 100) * (length / 100)));
-      System.out.println();
+
+      if (!Insight) {
+         System.out.println("Medications:\nYou don't get to view medication data\n");
+      }
+      else{
+         System.out.println("medications:");
+         if (medicationList.getAmountOfMedication() == 0) {
+            System.out.println("no current medication administered");
+         } else {
+            for (Medication medication : medicationList.getAllMedicationData()) {
+               System.out.println("  - " + medication.getSubstance());
+            }
+         }
+         System.out.println();
+      }
    }
 
    ////////////////////////////////////////////////////////////////////////////////
@@ -67,4 +90,13 @@ class Patient
       this.age = HandyMethods.calcAge(dateOfBirth);
    }
    public void setFirstName(String firstname) {this.firstName = firstname;}
+
+   public void addMedication(Medication medication) {
+      //medicationList.addMedicine(medicine);
+      medicationList.addMedication(medication);
+   }
+
+   public MedicationData getMedicationList() {
+      return medicationList;
+   }
 }
