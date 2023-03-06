@@ -24,9 +24,8 @@ public class PrintToScreen {
         System.out.print("\nEnter #choice: ");
     }
 
-    public static void printSwapPatient() {
-        System.out.println();
-        System.out.println("Type the corresponding number(s) of the data you would like to change; if there are multiple numbers, divide them with a comma ex. 4,5,6 (you cant choose 0 and 6 with other digits):");
+    public static void printPatientParameters() {
+        System.out.println("\nType the corresponding number(s) of the data you would like to change; if there are multiple numbers, divide them with a comma ex. 4,5,6 (you cant choose 0 and 6 with other digits):");
         System.out.format("%d:  Return\n", 0);
         System.out.format("%d:  Surname\n", 1);
         System.out.format("%d:  First Name\n", 2);

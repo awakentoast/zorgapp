@@ -1,15 +1,21 @@
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Set;
 
 public class HandyMethods {
+
     private HandyMethods() {throw new IllegalStateException("Utility class");} // can't make an object from HandyMethods, as it's a utility class
 
     private static final BScanner bScan = new BScanner();
 
     public static int calcAge(LocalDate born) {
         return Period.between(born, LocalDate.from(java.time.LocalDateTime.now())).getYears();
+    }
+
+    public static boolean usersTypesYesOrNo(String yesOrNo) {
+        return (Objects.equals(yesOrNo, "yes") || Objects.equals(yesOrNo, "Yes") || Objects.equals(yesOrNo, "YES"));
     }
 
     // function to make sure there are only integers and commas so the other functions don't run into errors when handed something else
@@ -65,11 +71,24 @@ public class HandyMethods {
     }
 
     //check if it falls in between bounds
-    public static int correctInput(int lowerBound, int higherBound, int number) {
+    public static int correctIntInput(int lowerBound, int higherBound, int number) {
         while (true) {
             if (number >= lowerBound && number <= higherBound) return number;
             else {
                 System.out.println("choose a *valid* digit!");
+                number = bScan.nextInt();
+            }
+        }
+    }
+
+    public static double correctDoubleInput(int lowerBound, int higherBound, double number, String errorMessage) {
+        while (true) {
+            if (number >= lowerBound && number <= higherBound) return number;
+            else {
+                if (number > higherBound){
+                    System.out.println("contact the guinness world book of records because you have a world record");
+                }
+                System.out.println(errorMessage);
                 number = bScan.nextInt();
             }
         }

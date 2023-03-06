@@ -29,6 +29,6 @@ public class Medication {
     }
 
     public void printMedicine() {
-        System.out.format("Substance: %s, type: %s, dosage: %s", substance, type, substance);
+        System.out.format("Substance: %s, type: %s, dosage: %s", substance, type, dose);
     }
 }

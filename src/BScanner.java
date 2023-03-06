@@ -1,4 +1,3 @@
-import java.io.BufferedReader;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.Locale;
@@ -86,7 +85,7 @@ class BScanner
    ////////////////////////////////////////////////////////////////////////////////
    public String nextLine()
    {
-      String r = null;
+      String r;
 
       while (true)
       {
@@ -125,12 +124,6 @@ class BScanner
             System.out.printf("%s is not a valid date \n", fmt);
             System.out.print("please enter a valid date (YYY-MM-DD): \n");
             fmt = scanner.next();
-//            while (scanner.hasNext())
-//            {
-//               scanner.next();
-//            }
-//         }
-//         scanner.nextLine();
          }
       }
 

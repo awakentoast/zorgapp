@@ -19,18 +19,23 @@ public class MedicationData {
     }
 
     public Medication getMedication(int i) {
-        return medicationList.get(i);
+        return medicationList.get(i - 1);
     }
 
     public int getAmountOfMedication() {
         return amountOfMedication;
     }
 
-    public void changeMedicationDosage(int i, String newDosage) {
-        int index = i - 1;
+    public void changeMedicationDosage(int index, String newDosage) {
+        index = index - 1;
         String substance = medicationList.get(index).getSubstance();
         String type = medicationList.get(index).getType();
         medicationList.remove(index);
         medicationList.add(index, new Medication(substance, type, newDosage));
+    }
+
+    public void deleteMedication(int index) {
+        medicationList.remove(index - 1);
+        amountOfMedication--;
     }
 }

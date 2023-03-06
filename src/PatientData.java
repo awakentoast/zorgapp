@@ -1,8 +1,11 @@
 import java.util.ArrayList;
 
+/**
+ * @author luukb
+ */
 public class PatientData {
 
-    private static ArrayList<Patient> allPatients = new ArrayList<>();
+    private final ArrayList<Patient> allPatients = new ArrayList<>();
     private int amountOfPatients = 0;
 
 
@@ -16,7 +19,7 @@ public class PatientData {
     }
 
     public Patient getPatient(int i) {
-        return allPatients.get(i);
+        return allPatients.get(i - 1);
     }
     public ArrayList<Patient> getPatientData() {
         return allPatients;

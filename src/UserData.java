@@ -1,20 +1,25 @@
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
+/**
+ * @author luukb
+ */
 public class UserData {
     private int amountOfUsers = 0;
     private final String[] occupations = {"General Practitioner", "Dentist", "Physical Therapist"};
-    private final boolean[] allowedMedicationEditings = {true, false, false};
-    private final boolean[] allowedMedicationInsights = {true, true, false};
 
-    private ArrayList<User> allUsers = new ArrayList<>();
+    //map with the corresponding medical editing at index 0 and medical insight at index 1 of the different occupations
+    Map<String, List<Boolean>> medicalAuthorization = Map.of(
+            //                               editing|insight
+                "General Practitioner", List.of(true, true),
+            "Dentist",              List.of(false, true),
+            "Physical Therapist",   List.of(false, false)
+    );
 
-    public boolean getAllowedMedicationEditing(int index) {
-        return allowedMedicationEditings[index - 1];
-    }
 
-    public boolean getAllowedMedicationInsight(int index) {
-        return allowedMedicationInsights[index - 1];
-    }
+    private final ArrayList<User> allUsers = new ArrayList<>();
+
 
     public UserData() {
         // TODO document why this constructor is empty
@@ -25,6 +30,14 @@ public class UserData {
         amountOfUsers++;
     }
 
+    public boolean getAllowedMedicationEditing(String occupation) {
+        return medicalAuthorization.get(occupation).get(0);
+    }
+
+    public boolean getAllowedMedicationInsight(String occupation) {
+        return medicalAuthorization.get(occupation).get(1);
+    }
+    public User getUser(int i) {return allUsers.get(i - 1);}
     public ArrayList<User> getUserData() {return allUsers;}
 
     public int getAmountOfUsers() {return amountOfUsers;}
