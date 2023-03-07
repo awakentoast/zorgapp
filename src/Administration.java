@@ -252,13 +252,13 @@ class Administration {
             while (weight <= 0 || weight >= 272){
                System.out.println("What do you want the weight of the new patient to be? (kg)");
                weight = HandyMethods.correctDoubleInput(1, 636, bScan.nextDouble(), "The weight must be between 1 kg and 636 kg");
-            } currentPatient.setWeight(weight);
+            }
 
             double length = -1;
             while (length <= 0 || length >= 272){
                length = HandyMethods.correctDoubleInput(1, 273, bScan.nextDouble(), "The length must be between 1 cm and 273 cm");
                System.out.println("What do you want the length of the new patient to be? (cm)");
-            } currentPatient.setLength(length);
+            } 
 
             MedicationData medicationList = new MedicationData();
 
@@ -286,6 +286,7 @@ class Administration {
          }
       }
    }
+   
 
    private void deletePatients() {
 
