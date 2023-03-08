@@ -55,9 +55,9 @@ class Administration {
       allMedications.addMedication(new Medication("xtc", "tabs", "1 tab a month"));
       allMedications.addMedication(new Medication("lsd", "tabs", "1 tab a month"));
 
-      allUsers.addUser(new User(1, "El Chapo", allUsers.getOccupation(1), allUsers.getAllowedMedicationEditing(allUsers.getOccupation(1)), allUsers.getAllowedMedicationInsight(allUsers.getOccupation(1)) ));
-      allUsers.addUser(new User(2, "Barry Batsbak", allUsers.getOccupation(2), allUsers.getAllowedMedicationEditing(allUsers.getOccupation(2)), allUsers.getAllowedMedicationInsight(allUsers.getOccupation(2))));
-      allUsers.addUser(new User(3, "Kenzo Tenma", allUsers.getOccupation(3), allUsers.getAllowedMedicationEditing(allUsers.getOccupation(3)), allUsers.getAllowedMedicationInsight(allUsers.getOccupation(3))));
+      allUsers.addUser(new GeneralPractitioner(1, "El Chapo"));
+      allUsers.addUser(new Dentist(2, "Barry Batsbak"));
+      allUsers.addUser(new PhysicalTherapist(3, "Kenzo Tenma"));
 
       MedicationData medicationPatient1 = new MedicationData();
       allPatients.addPatient(new Patient(1, "Duck", "Donald", LocalDate.of(1934, 6, 9), HandyMethods.calcAge(LocalDate.of(1934, 6, 9)), 30, 130, medicationPatient1));
@@ -84,7 +84,7 @@ class Administration {
          System.out.println("0: Return");
          int i = 1;
          for (User user : allUsers.getUserData()) {
-            System.out.format("%d: %s %s\n", i, user.getUserName(), user.getOccupation());
+            System.out.format("%d: %s [%s]\n", i, user.getUserName(), user.getOccupation());
             i++;
          }
          System.out.print("\nEnter #choice: ");
@@ -125,7 +125,7 @@ class Administration {
       amountOfAddedUsers = HandyMethods.correctIntInput(0, 1000000000, amountOfAddedUsers);
 
       // prevents multiple calls being made when more than 1 user is added
-      int size = allPatients.getPatientData().size();
+      int size = allPatients.getAmountOfPatients();
       System.out.format("\nAre you sure you want to add %d amount of users\n", amountOfAddedUsers);
       System.out.println("yes/no");
       if (!HandyMethods.usersTypesYesOrNo(bScan.nextLine()) || amountOfAddedUsers == 0) {
@@ -144,16 +144,19 @@ class Administration {
             System.out.println("What occupation does the user have, choose 1 from below:\n");
 
             int occupationCount = 0;
-            for (String occupation : allUsers.getOccupations()) {
+            for (String occupation : allUsers.getAllOccupations()) {
                occupationCount++;
                System.out.format("%d: %s\n", occupationCount, occupation);
             }
 
             int occupationIndex = HandyMethods.correctIntInput(1, allUsers.getAmountOfOccupations(), bScan.nextInt());
-            String occupation = allUsers.getOccupation(occupationIndex);
 
-
-            allUsers.addUser(new User(size / 2 + i + 1, firstname + " " + surname, occupation, allUsers.getAllowedMedicationEditing(occupation), allUsers.getAllowedMedicationInsight(occupation)));
+            switch (occupationIndex) {
+               case 1 -> allUsers.addUser(new GeneralPractitioner(size / 2 + i + 1, firstname + " " + surname));
+               case 2 -> allUsers.addUser(new Dentist(size / 2 + i + 1, firstname + " " + surname));
+               case 3 -> allUsers.addUser(new PhysicalTherapist(size / 2 + i + 1, firstname + " " + surname));
+               default -> System.out.format("You did an oopsie in adduser switch case, number [%d]\n", occupationIndex);
+            }
          }
 
          System.out.println("\nDo you want the newly added user to be the current user?");
@@ -198,20 +201,20 @@ class Administration {
             }
 
             case WEIGHT -> {
-               double weight = -1;
-               while (weight <= 0 || weight >= 636){
+               double weight;
+               do {
                   System.out.println("What do you want the weight of the new patient to be? (kg)");
                   weight = HandyMethods.correctDoubleInput(1, 636, bScan.nextDouble(), "The weight must be between 1 kg and 636 kg");
-               }
+               } while (weight <= 0 || weight >= 636);
                currentPatient.setWeight(weight);
             }
 
             case LENGTH -> {
-               double length = -1;
-               while (length <= 0 || length >= 273){
+               double length;
+               do {
                   System.out.println("What do you want the length of the new patient to be? (cm)");
                   length = HandyMethods.correctDoubleInput(1, 273, bScan.nextDouble(), "The length must be between 1 cm and 273 cm");
-               }
+               } while (length <= 0 || length >= 273);
                currentPatient.setLength(length);
             }
 
@@ -248,17 +251,17 @@ class Administration {
             System.out.println("What do you want the birthdate of the patient to be? [YYYY-MM-DD]");
             LocalDate born = bScan.nextDate(bScan.nextLine());
 
-            double weight = -1;
-            while (weight <= 0 || weight >= 272){
+            double weight;
+            do {
                System.out.println("What do you want the weight of the new patient to be? (kg)");
                weight = HandyMethods.correctDoubleInput(1, 636, bScan.nextDouble(), "The weight must be between 1 kg and 636 kg");
-            }
+            } while (weight <= 0 || weight >= 636);
 
-            double length = -1;
-            while (length <= 0 || length >= 272){
-               length = HandyMethods.correctDoubleInput(1, 273, bScan.nextDouble(), "The length must be between 1 cm and 273 cm");
+            double length;
+            do {
                System.out.println("What do you want the length of the new patient to be? (cm)");
-            } 
+               length = HandyMethods.correctDoubleInput(1, 273, bScan.nextDouble(), "The length must be between 1 cm and 273 cm");
+            } while (length <= 0 || length >= 273);
 
             MedicationData medicationList = new MedicationData();
 
@@ -440,7 +443,7 @@ class Administration {
    void menu() {
       boolean nextCycle = true;
       while (nextCycle) {
-         System.out.format("Current user: [%d] %s %s\n", currentUser.getUserID(), currentUser.getUserName(), currentUser.getOccupation());
+         System.out.format("Current user: [%d] %s (%s)\n", currentUser.getUserID(), currentUser.getUserName(), currentUser.getOccupation());
          System.out.format("%s\n", "-".repeat(35));
          System.out.format("Current patient: %s\n", currentPatient.fullName());
 
@@ -449,7 +452,7 @@ class Administration {
 
          int choice = bScan.nextInt();
          switch (choice) {
-            case STOP -> nextCycle = false; // interrupt the loop
+            case STOP -> nextCycle = false; // interrupts the loop
 
             case VIEW -> currentPatient.viewData(currentUser.getMedicationInsightAuthorization());
 

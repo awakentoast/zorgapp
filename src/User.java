@@ -1,14 +1,8 @@
-class User
-{
-   private final String userName;
-   private final int    userID;
-   private final String occupation;
-   private final boolean medicationEditing;
-   private final boolean medicationInsight;
+abstract class User {
+   protected final String userName;
+   protected final int    userID;
 
 
-   ///////////////////////////////////////////////////////////
-   ///////////////////////////////////////////////////////////
    public String getUserName()
    {
       return userName;
@@ -20,22 +14,19 @@ class User
    }
 
    public String getOccupation() {
-      return occupation;
+      return "User";
    }
 
    public boolean getMedicationEditingAuthorization() {
-      return medicationEditing;
+      return true;
    }
 
    public boolean getMedicationInsightAuthorization() {
-      return medicationInsight;
+      return true;
    }
 
-   public User(int id, String name, String occupation, boolean medicationEditing, boolean medicationInsight) {
+   protected User(int id, String name) {
       this.userID = id;
       this.userName = name;
-      this.occupation = occupation;
-      this.medicationEditing = medicationEditing;
-      this.medicationInsight = medicationInsight;
    }
 }

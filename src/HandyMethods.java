@@ -15,7 +15,7 @@ public class HandyMethods {
     }
 
     public static boolean usersTypesYesOrNo(String yesOrNo) {
-        return (Objects.equals(yesOrNo, "yes") || Objects.equals(yesOrNo, "Yes") || Objects.equals(yesOrNo, "YES"));
+        return (Objects.equals(yesOrNo.toLowerCase(), "yes"));
     }
 
     // function to make sure there are only integers and commas so the other functions don't run into errors when handed something else
