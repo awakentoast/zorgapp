@@ -46,9 +46,7 @@ class Administration {
    private final BScanner bScan = new BScanner();
 
 
-
-   public Administration()
-   {
+   public Administration() {
       allMedications.addMedication(new Medication("paracetamol", "pijnstiller", "maximaal 4000 mg per dag"));
       allMedications.addMedication(new Medication("aspirine", "pijnstiller", "maximaal 4000 mg per dag"));
       allMedications.addMedication(new Medication("xanax", "angstverlichting", "not with alcohol"));
@@ -60,25 +58,35 @@ class Administration {
       allUsers.addUser(new PhysicalTherapist(3, "Kenzo Tenma"));
 
       MedicationData medicationPatient1 = new MedicationData();
-      allPatients.addPatient(new Patient(1, "Duck", "Donald", LocalDate.of(1934, 6, 9), HandyMethods.calcAge(LocalDate.of(1934, 6, 9)), 30, 130, medicationPatient1));
+      allPatients.addPatient(new Patient(1, "Duck", "Donald", LocalDate.of(1934, 6, 9),30, 130, medicationPatient1));
       MedicationData medicationPatient2 = new MedicationData();
-      allPatients.addPatient(new Patient(2, "Baldy", "Caped", LocalDate.of(1997, 6, 9), HandyMethods.calcAge(LocalDate.of(1997, 6, 9)), 75, 175, medicationPatient2));
+      allPatients.addPatient(new Patient(2, "Baldy", "Caped", LocalDate.of(1997, 6, 9),75, 175, medicationPatient2));
       MedicationData medicationPatient3 = new MedicationData();
-      allPatients.addPatient(new Patient(3, "Henkema", "Henk", LocalDate.of(1999, 9, 9), HandyMethods.calcAge(LocalDate.of(1999, 9, 9)), 50, 160, medicationPatient3));
+      allPatients.addPatient(new Patient(3, "Henkema", "Henk", LocalDate.of(1999, 9, 9),50, 160, medicationPatient3));
       MedicationData medicationPatient4 = new MedicationData();
-      allPatients.addPatient(new Patient(4, "White", "Walter", LocalDate.of(1958, 9, 7), HandyMethods.calcAge(LocalDate.of(1958, 9, 7)), 98, 191, medicationPatient4));
+      allPatients.addPatient(new Patient(4, "White", "Walter", LocalDate.of(1958, 9, 7),98, 191, medicationPatient4));
       MedicationData medicationPatient5 = new MedicationData();
-      allPatients.addPatient(new Patient(5, "Hat", "Straw", LocalDate.of(2004, 5, 5), HandyMethods.calcAge(LocalDate.of(2004, 5, 5)), 64, 174, medicationPatient5));
+      allPatients.addPatient(new Patient(5, "Hat", "Straw", LocalDate.of(2004, 5, 5),64, 174, medicationPatient5));
 
       currentPatient = allPatients.getPatient(1);
       currentUser = allUsers.getUser(1);
    }
 
+
+
+   public static boolean userTypesYesOrNo(String yesOrNo) {
+      return (Objects.equals(yesOrNo.toLowerCase(), "yes"));
+   }
+
+
    private void swapUser() {
       if (allUsers.getAmountOfUsers() == 0) {
-         System.out.println("There are no users, first add more users");
+         System.out.println("There are no users, first add more users\n");
       }
-      else{
+      else if (allUsers.getAmountOfUsers() == 1) {
+            System.out.println("You are the only registered user in the system, please add more users if you would like to switch user\n");
+         }
+      else {
          System.out.println("\nWhat user do you want to switch to?");
 
          System.out.println("0: Return");
@@ -89,7 +97,7 @@ class Administration {
          }
          System.out.print("\nEnter #choice: ");
 
-         int userToSwitchTo = HandyMethods.correctIntInput(1, allUsers.getAmountOfUsers(), bScan.nextInt());
+         int userToSwitchTo = bScan.nextInt(1, allUsers.getAmountOfUsers());
          if (userToSwitchTo != 0) {
             currentUser = allUsers.getUser(userToSwitchTo);
          }
@@ -97,9 +105,13 @@ class Administration {
       }
    }
 
+
    private void swapPatient() {
       if (allPatients.getAmountOfPatients() == 0) {
-         System.out.println("There are no patients, first add more patients");
+         System.out.println("There are no patients, first add more patients\n");
+      }
+      else if (allUsers.getAmountOfUsers() == 1) {
+         System.out.println("The current patient is the only registered patient, first add more patients if you would like to switch to a different patient\n");
       }
       else {
          System.out.println("\nWhat patient do you want to switch to?\n");
@@ -112,26 +124,26 @@ class Administration {
          }
          System.out.print("\nEnter choice: ");
 
-         int patientToSwitchTo = HandyMethods.correctIntInput(0, allPatients.getAmountOfPatients(), bScan.nextInt());
+         int patientToSwitchTo = bScan.nextInt(1, allPatients.getAmountOfPatients());
          currentPatient = allPatients.getPatient(patientToSwitchTo);
 
          System.out.println();
       }
    }
 
+
    private void addUser() {
       System.out.println("How many users do you want to add?");
-      int amountOfAddedUsers = bScan.nextInt();
-      amountOfAddedUsers = HandyMethods.correctIntInput(0, 1000000000, amountOfAddedUsers);
+
+      int amountOfAddedUsers = bScan.nextInt(1, 1000000000);
 
       // prevents multiple calls being made when more than 1 user is added
       int size = allPatients.getAmountOfPatients();
       System.out.format("\nAre you sure you want to add %d amount of users\n", amountOfAddedUsers);
       System.out.println("yes/no");
-      if (!HandyMethods.usersTypesYesOrNo(bScan.nextLine()) || amountOfAddedUsers == 0) {
+      if (!userTypesYesOrNo(bScan.nextLine()) || amountOfAddedUsers == 0) {
          System.out.println("You have chosen not to add any users\n");
-      }
-      else {
+      } else {
          for (int i = 1; i <= amountOfAddedUsers; i++) {
             System.out.format("\nNew User [%d]:\n", size / 2 + i + 1);
 
@@ -149,7 +161,7 @@ class Administration {
                System.out.format("%d: %s\n", occupationCount, occupation);
             }
 
-            int occupationIndex = HandyMethods.correctIntInput(1, allUsers.getAmountOfOccupations(), bScan.nextInt());
+            int occupationIndex = bScan.nextInt(1, allUsers.getAmountOfOccupations());
 
             switch (occupationIndex) {
                case 1 -> allUsers.addUser(new GeneralPractitioner(size / 2 + i + 1, firstname + " " + surname));
@@ -162,7 +174,7 @@ class Administration {
          System.out.println("\nDo you want the newly added user to be the current user?");
          System.out.println("yes/no");
 
-         if (!HandyMethods.usersTypesYesOrNo(bScan.nextLine())) {
+         if (!userTypesYesOrNo(bScan.nextLine())) {
             System.out.println("You have chosen not to change the current user\n");
          } else {
             currentUser = allUsers.getUser(allUsers.getAmountOfUsers());
@@ -170,15 +182,15 @@ class Administration {
       }
    }
 
+
    private void changePatientData() {
 
       //prints the choices for the user
       PrintToScreen.printPatientParameters();
 
       //prevents for anything but integers and 1,2 integers being passed along
-      String str = HandyMethods.validPhrase(bScan.nextLine());
+      int[] fieldsToBeChanged = bScan.nextInts(1, LENGTH);
 
-      int[] fieldsToBeChanged = HandyMethods.stringToNumbers(str, 0, LENGTH);
 
       for (int fieldToBeChanged : fieldsToBeChanged) {
          switch (fieldToBeChanged) {
@@ -204,7 +216,7 @@ class Administration {
                double weight;
                do {
                   System.out.println("What do you want the weight of the new patient to be? (kg)");
-                  weight = HandyMethods.correctDoubleInput(1, 636, bScan.nextDouble(), "The weight must be between 1 kg and 636 kg");
+                  weight = bScan.nextDouble(1, 636,  "The weight must be between 1 kg and 636 kg");
                } while (weight <= 0 || weight >= 636);
                currentPatient.setWeight(weight);
             }
@@ -213,32 +225,27 @@ class Administration {
                double length;
                do {
                   System.out.println("What do you want the length of the new patient to be? (cm)");
-                  length = HandyMethods.correctDoubleInput(1, 273, bScan.nextDouble(), "The length must be between 1 cm and 273 cm");
+                  length = bScan.nextDouble(1, 273,"The length must be between 1 cm and 273 cm");
                } while (length <= 0 || length >= 273);
                currentPatient.setLength(length);
             }
-
-            default -> {
-               System.out.println(fieldToBeChanged);
-               System.out.println("you made an oopsie :3");
-            }
+            
+            default -> System.out.format("you made an oopsie :3 [%d]\n", fieldToBeChanged);
          }
       }
+      System.out.println();
    }
 
 
    private void addPatient() {
       System.out.println("How many patients do you want to add?");
-      int amountOfAddedPatients = bScan.nextInt();
-      amountOfAddedPatients = HandyMethods.correctIntInput(0, 100000000, amountOfAddedPatients);
+      int amountOfAddedPatients = bScan.nextInt(0, 100000000);
       int size = allPatients.getPatientData().size();
 
       System.out.format("\nAre you sure you want to add %d amount of users\n", amountOfAddedPatients);
-      if (HandyMethods.usersTypesYesOrNo(bScan.nextLine()) || amountOfAddedPatients == 0) {
-            System.out.println("You have chosen not to add any patients\n");
-      }
-
-      else {
+      if (userTypesYesOrNo(bScan.nextLine()) || amountOfAddedPatients == 0) {
+         System.out.println("You have chosen not to add any patients\n");
+      } else {
          for (int i = 1; i <= amountOfAddedPatients; i++) {
             System.out.format("\nNew Patient [%d]:\n", size + i);
 
@@ -254,42 +261,43 @@ class Administration {
             double weight;
             do {
                System.out.println("What do you want the weight of the new patient to be? (kg)");
-               weight = HandyMethods.correctDoubleInput(1, 636, bScan.nextDouble(), "The weight must be between 1 kg and 636 kg");
+               weight = bScan.nextDouble(1, 636, "The weight must be between 1 kg and 636 kg, new weight:");
             } while (weight <= 0 || weight >= 636);
 
             double length;
             do {
                System.out.println("What do you want the length of the new patient to be? (cm)");
-               length = HandyMethods.correctDoubleInput(1, 273, bScan.nextDouble(), "The length must be between 1 cm and 273 cm");
+               length = bScan.nextDouble(1, 273,  "The length must be between 1 cm and 273 cm, new length:");
             } while (length <= 0 || length >= 273);
 
             MedicationData medicationList = new MedicationData();
 
             // adding the patient here so because the medicationList is an object that can always be altered
-            allPatients.addPatient(new Patient(size + i, surname, firstname, born, HandyMethods.calcAge(born), weight, length, medicationList));
+            allPatients.addPatient(new Patient(size + i, surname, firstname, born, weight, length, medicationList));
             if (!currentUser.getMedicationEditingAuthorization()) {
                System.out.println("You are not authorized to add any medication");
-            }
-            else {
+            } else {
 
                System.out.println("Does the patient use any medication?");
                System.out.println("yes/no");
                currentPatient = allPatients.getPatient(allPatients.getAmountOfPatients());
-               if (HandyMethods.usersTypesYesOrNo(bScan.nextLine())) {addMedication();}
+               if (userTypesYesOrNo(bScan.nextLine())) {
+                  addMedication();
+               }
             }
          }
 
          System.out.println("Do you want the newly added patient to be the current patient?");
          System.out.println("yes/no");
 
-         if (!HandyMethods.usersTypesYesOrNo(bScan.nextLine())) {
+         if (!userTypesYesOrNo(bScan.nextLine())) {
             System.out.println("You have chosen not to change the current patient\n");
          } else {
             currentPatient = allPatients.getPatient(allPatients.getAmountOfPatients());
          }
       }
    }
-   
+
 
    private void deletePatients() {
 
@@ -304,22 +312,19 @@ class Administration {
       System.out.format("%d: All patients\n", allPatients.getAmountOfPatients() + 1);
       System.out.print("\nEnter #choice:");
 
-      String str = HandyMethods.validPhrase(bScan.nextLine());
+      int[] usersToBeDeleted = bScan.nextInts(1, allPatients.getAmountOfPatients());
 
       // 0 is return, so it circumvents the deletion
-      if (Objects.equals(str, "0")) {
+      if (usersToBeDeleted[0] == 0) {
          System.out.println("You have chosen not to delete any patients");
-      }
-      else {
-         int[] usersToBeDeleted = HandyMethods.stringToNumbers(str, 0, allPatients.getAmountOfPatients());
+      } else {
          //makes sure the user doesn't haphazardly delete patients
-         System.out.println("Are you sure if you want to delete patients?");
+         System.out.println("Are you sure if you want to delete the patient(s)?");
          System.out.println("yes/no");
 
-         if (!HandyMethods.usersTypesYesOrNo(bScan.nextLine())) {
+         if (!userTypesYesOrNo(bScan.nextLine())) {
             System.out.println("you didn't type yes so patients won't be deleted");
-         }
-         else {
+         } else {
             //reverses the numbers, so we don't get index errors when deleting multiple patients at once
             for (int j = 0; j < usersToBeDeleted.length / 2; j++) {
                int temp = usersToBeDeleted[j];
@@ -331,7 +336,13 @@ class Administration {
             }
          }
       }
+
+      if (allPatients.getAmountOfPatients() == 0) {
+         System.out.println("You have deleted all the patients, first add a patient to proceed\n");
+         addPatient();
+      }
    }
+
 
    private void addMedication() {
       if (!currentUser.getMedicationEditingAuthorization()) {
@@ -343,19 +354,18 @@ class Administration {
          int i = 0;
          for (Medication medication : allMedications.getAllMedicationData()) {
             i++;
-            System.out.format("%d: %s\n", i, medication.getSubstance());
+            System.out.format("%d: %s (%s)\n", i, medication.getSubstance(), medication.getType());
          }
          System.out.format("%d: Add all of the medication\n", allMedications.getAmountOfMedication() + 1);
 
          System.out.print("\nEnter Choice: ");
-         String str = HandyMethods.validPhrase(bScan.nextLine());
-         int[] medicationsToBeAdded = HandyMethods.stringToNumbers(str, 0, allMedications.getAmountOfMedication());
+         int[] medicationsToBeAdded = bScan.nextInts(1,allMedications.getAmountOfMedication());
 
          System.out.println();
 
          if (medicationsToBeAdded[0] != 0) {
             for (int medicationToBeAdded : medicationsToBeAdded) {
-               System.out.format("What dosage would you like to prescribe [%s]?\n", allMedications.getMedication(medicationToBeAdded).getSubstance());
+               System.out.format("What dosage would you like to prescribe for %s?\n", allMedications.getMedication(medicationToBeAdded).getSubstance());
                String medicationPrescription = bScan.nextLine();
                Medication medication = allMedications.getMedication(medicationToBeAdded);
                medication.setDose(medicationPrescription);
@@ -365,14 +375,21 @@ class Administration {
       }
    }
 
+
    private void changeMedicationDosage() {
-      if (!currentUser.getMedicationEditingAuthorization()){
+      if (!currentUser.getMedicationEditingAuthorization()) {
          System.out.println("You are not authorized to change or edit medication");
       }
       else {
          if (currentPatient.getMedicationList().getAmountOfMedication() == 0) {
             System.out.println("\nThe patient doesn't currently have any medication administered to them, first administer medication to them\n");
-         } else {
+         }
+         else if (currentPatient.getMedicationList().getAmountOfMedication() == 1) {
+               System.out.format("\nWhat do you want the new dosage to be of %s?\n", currentPatient.getMedicationList().getMedication(1).getSubstance());
+            String newDosage = bScan.nextLine();
+            currentPatient.getMedicationList().changeMedicationDosage(1, newDosage);
+         }
+         else {
             System.out.println("Of which medication would you like to alter the dose?\n");
 
             System.out.println("0: Don't change anything\n");
@@ -384,13 +401,12 @@ class Administration {
             System.out.format("%d: Change the dosage of all of them\n", currentPatient.getMedicationList().getAmountOfMedication() + 1);
 
             System.out.print("\nEnter choice: ");
-            String str = HandyMethods.validPhrase(bScan.nextLine());
 
-            int[] medicationDosagesToBeAltered = HandyMethods.stringToNumbers(str, 0, currentPatient.getMedicationList().getAmountOfMedication());
+            int[] medicationDosagesToBeAltered = bScan.nextInts(1, currentPatient.getMedicationList().getAmountOfMedication());
 
             if (medicationDosagesToBeAltered[0] != 0) {
                for (int j : medicationDosagesToBeAltered) {
-                  System.out.format("\nWhat do you want the new dosage to be [%s]?\n", currentPatient.getMedicationList().getMedication(j).getSubstance());
+                  System.out.format("\nWhat do you want the new dosage to be of %s?\n", currentPatient.getMedicationList().getMedication(j).getSubstance());
                   String newDosage = bScan.nextLine();
                   currentPatient.getMedicationList().changeMedicationDosage(j, newDosage);
                }
@@ -399,11 +415,11 @@ class Administration {
       }
    }
 
+
    private void deleteMedication() {
       if (currentPatient.getMedicationList().getAmountOfMedication() == 0) {
          System.out.println("There is no medication to delete, first prescribe medication\n");
-      }
-      else {
+      } else {
          System.out.println("What medication would you like to delete? Type the corresponding number(s) of the medication you would like to change; if there are multiple numbers, divide them with a comma ex. 4,5,6 (you cant choose 0 and \"all of them\" with other digits):\n");
 
          System.out.println("0: Delete nothing and return");
@@ -416,13 +432,14 @@ class Administration {
 
          System.out.print("\nEnter Choice: ");
 
-         String str = HandyMethods.validPhrase(bScan.nextLine());
-         int[] medicationsToBeDeleted = HandyMethods.stringToNumbers(str, 0, currentPatient.getMedicationList().getAmountOfMedication());
+
+         int [] medicationsToBeDeleted = bScan.nextInts(1, currentPatient.getMedicationList().getAmountOfMedication());
+
          if (medicationsToBeDeleted[0] != 0) {
             System.out.println("Are you sure if you want to delete the medication(s)?");
             System.out.println("yes/no");
 
-            if (!HandyMethods.usersTypesYesOrNo(bScan.nextLine())) {
+            if (!userTypesYesOrNo(bScan.nextLine())) {
                System.out.println("you didn't type yes so the medication(s) won't be deleted");
             } else {
                //reverses the numbers, so we don't get index errors when deleting multiple medications at once
@@ -443,14 +460,14 @@ class Administration {
    void menu() {
       boolean nextCycle = true;
       while (nextCycle) {
+         System.out.format("%s\n\n", "-".repeat(60));
          System.out.format("Current user: [%d] %s (%s)\n", currentUser.getUserID(), currentUser.getUserName(), currentUser.getOccupation());
-         System.out.format("%s\n", "-".repeat(35));
          System.out.format("Current patient: %s\n", currentPatient.fullName());
 
          //the choices the user has. If the user can edit medication, those options are shown, else not
          PrintToScreen.printStart(currentUser.getMedicationEditingAuthorization());
 
-         int choice = bScan.nextInt();
+         int choice = bScan.nextInt(1, DELETE_MEDICATION);
          switch (choice) {
             case STOP -> nextCycle = false; // interrupts the loop
 
@@ -474,7 +491,7 @@ class Administration {
 
             case DELETE_MEDICATION -> deleteMedication();
 
-            default -> System.out.println("you did an oopsie :3");
+            default -> System.out.format("you did an oopsie :3 [%d]\n", choice);
          }
       }
    }

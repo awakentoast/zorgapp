@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.Period;
 
 
 class Patient
@@ -7,21 +8,27 @@ class Patient
    private String    surname;
    private String    firstName;
    private LocalDate dateOfBirth;
-   private int       age;
    private double    weight;
    private double    length;
+
    private final MedicationData medicationList;
 
+   public int calcAge(LocalDate born) {
+      return Period.between(born, LocalDate.from(java.time.LocalDateTime.now())).getYears();
+   }
+
+   private double calcBMI(double weight, double length) {
+      return (weight / ((length / 100) * (length / 100)));
+   }
 
    ////////////////////////////////////////////////////////////////////////////////
    // Constructor
    ////////////////////////////////////////////////////////////////////////////////
-   Patient(int id, String surname, String firstName, LocalDate dateOfBirth, int age, double weight, double length, MedicationData medicationList) {
+   Patient(int id, String surname, String firstName, LocalDate dateOfBirth, double weight, double length, MedicationData medicationList) {
       this.id = id;
       this.surname = surname;
       this.firstName = firstName;
       this.dateOfBirth = dateOfBirth;
-      this.age = age;
       this.weight = weight;
       this.length = length;
       this.medicationList = medicationList;
@@ -36,10 +43,10 @@ class Patient
       System.out.format("%-17s %s\n", "Surname:", surname);
       System.out.format("%-17s %s\n", "firstName:", firstName);
       System.out.format("%-17s %s\n", "Date of birth:", dateOfBirth);
-      System.out.format("%-17s %s\n", "Age:", age);
+      System.out.format("%-17s %s\n", "Age:", calcAge(dateOfBirth));
       System.out.format("%-17s %.1f\n", "Weight: ", weight);
       System.out.format("%-17s %.1f\n", "Length:", length);
-      System.out.format("%-17s %.1f\n", "bmi:", weight / ((length / 100) * (length / 100)));
+      System.out.format("%-17s %.1f\n", "bmi:", calcBMI(weight, length));
 
       System.out.println("\nMedications:");
       if (!Insight) {
@@ -53,9 +60,11 @@ class Patient
                System.out.println("  - " + medication.getSubstance());
                System.out.println("     -" + medication.getDose());
             }
+            System.out.println();
          }
       }
    }
+
 
    ////////////////////////////////////////////////////////////////////////////////
    // Shorthand for a Patient's full name
@@ -70,8 +79,8 @@ class Patient
    public void setWeight(double weight) {this.weight = weight;}
    public void setDateOfBirth(LocalDate born) {
       this.dateOfBirth = born;
-      this.age = HandyMethods.calcAge(dateOfBirth);
    }
+
    public void setFirstName(String firstname) {this.firstName = firstname;}
 
    public void addMedication(Medication medication) {
