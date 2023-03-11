@@ -21,7 +21,7 @@ class Administration {
    static final int CHANGE_CURRENT_PATIENT_INFORMATION = 4;
    static final int ADD_USER = 5;
    static final int ADD_PATIENT = 6;
-   static final int REMOVE_PATIENTS = 7;
+   static final int DELETE_PATIENTS = 7;
    static final int ADD_MEDICATION = 8;
    static final int CHANGE_MEDICATION = 9;
 
@@ -78,7 +78,6 @@ class Administration {
       return (Objects.equals(yesOrNo.toLowerCase(), "yes"));
    }
 
-
    private void swapUser() {
       if (allUsers.getAmountOfUsers() == 0) {
          System.out.println("There are no users, first add more users\n");
@@ -89,12 +88,10 @@ class Administration {
       else {
          System.out.println("\nWhat user do you want to switch to?");
 
-         System.out.println("0: Return");
-         int i = 1;
-         for (User user : allUsers.getUserData()) {
-            System.out.format("%d: %s [%s]\n", i, user.getUserName(), user.getOccupation());
-            i++;
-         }
+         System.out.println("\n0: Return");
+
+         allUsers.printUsers();
+
          System.out.print("\nEnter #choice: ");
 
          int userToSwitchTo = bScan.nextInt(1, allUsers.getAmountOfUsers());
@@ -117,11 +114,9 @@ class Administration {
          System.out.println("\nWhat patient do you want to switch to?\n");
 
          System.out.println("0: Return");
-         int i = 1;
-         for (Patient patient : allPatients.getPatientData()) {
-            System.out.format("%d: %s\n", i, patient.fullName());
-            i++;
-         }
+
+         allPatients.printPatients();
+
          System.out.print("\nEnter choice: ");
 
          int patientToSwitchTo = bScan.nextInt(1, allPatients.getAmountOfPatients());
@@ -195,7 +190,7 @@ class Administration {
       for (int fieldToBeChanged : fieldsToBeChanged) {
          switch (fieldToBeChanged) {
 
-            case RETURN -> System.out.println("You have chosen to not change the data\n");
+            case RETURN -> System.out.println("You have chosen to not change the data");
 
             case FIRSTNAME -> {
                System.out.println("What do you want to change the first name to?");
@@ -217,7 +212,7 @@ class Administration {
                do {
                   System.out.println("What do you want the weight of the new patient to be? (kg)");
                   weight = bScan.nextDouble(1, 636,  "The weight must be between 1 kg and 636 kg");
-               } while (weight <= 0 || weight >= 636);
+               } while (weight >= 1 && weight <= 636);
                currentPatient.setWeight(weight);
             }
 
@@ -226,7 +221,7 @@ class Administration {
                do {
                   System.out.println("What do you want the length of the new patient to be? (cm)");
                   length = bScan.nextDouble(1, 273,"The length must be between 1 cm and 273 cm");
-               } while (length <= 0 || length >= 273);
+               } while (length >= 1 && length <= 273);
                currentPatient.setLength(length);
             }
             
@@ -240,9 +235,10 @@ class Administration {
    private void addPatient() {
       System.out.println("How many patients do you want to add?");
       int amountOfAddedPatients = bScan.nextInt(0, 100000000);
-      int size = allPatients.getPatientData().size();
+      int size = allPatients.getAmountOfPatients();
 
       System.out.format("\nAre you sure you want to add %d amount of users\n", amountOfAddedPatients);
+      System.out.println("yes/no");
       if (userTypesYesOrNo(bScan.nextLine()) || amountOfAddedPatients == 0) {
          System.out.println("You have chosen not to add any patients\n");
       } else {
@@ -262,13 +258,13 @@ class Administration {
             do {
                System.out.println("What do you want the weight of the new patient to be? (kg)");
                weight = bScan.nextDouble(1, 636, "The weight must be between 1 kg and 636 kg, new weight:");
-            } while (weight <= 0 || weight >= 636);
+            } while (weight >= 1 && weight <= 636);
 
             double length;
             do {
                System.out.println("What do you want the length of the new patient to be? (cm)");
                length = bScan.nextDouble(1, 273,  "The length must be between 1 cm and 273 cm, new length:");
-            } while (length <= 0 || length >= 273);
+            } while (length >= 1 && length <= 273);
 
             MedicationData medicationList = new MedicationData();
 
@@ -277,7 +273,6 @@ class Administration {
             if (!currentUser.getMedicationEditingAuthorization()) {
                System.out.println("You are not authorized to add any medication");
             } else {
-
                System.out.println("Does the patient use any medication?");
                System.out.println("yes/no");
                currentPatient = allPatients.getPatient(allPatients.getAmountOfPatients());
@@ -304,11 +299,9 @@ class Administration {
       System.out.println("Type the corresponding number(s) of the patients you would like to delete; if there are multiple , divide them with a comma ex. 1,2,3:\n");
 
       System.out.println("0: Return");
-      int i = 1;
-      for (Patient patient : allPatients.getPatientData()) {
-         System.out.printf("%d: %s \n", i, patient.fullName());
-         i++;
-      }
+
+      allPatients.printPatients();
+
       System.out.format("%d: All patients\n", allPatients.getAmountOfPatients() + 1);
       System.out.print("\nEnter #choice:");
 
@@ -319,7 +312,7 @@ class Administration {
          System.out.println("You have chosen not to delete any patients");
       } else {
          //makes sure the user doesn't haphazardly delete patients
-         System.out.println("Are you sure if you want to delete the patient(s)?");
+         System.out.println("\nAre you sure if you want to delete the patient(s)?");
          System.out.println("yes/no");
 
          if (!userTypesYesOrNo(bScan.nextLine())) {
@@ -370,6 +363,7 @@ class Administration {
                Medication medication = allMedications.getMedication(medicationToBeAdded);
                medication.setDose(medicationPrescription);
                currentPatient.addMedication(medication);
+               System.out.println();
             }
          }
       }
@@ -385,7 +379,7 @@ class Administration {
             System.out.println("\nThe patient doesn't currently have any medication administered to them, first administer medication to them\n");
          }
          else if (currentPatient.getMedicationList().getAmountOfMedication() == 1) {
-               System.out.format("\nWhat do you want the new dosage to be of %s?\n", currentPatient.getMedicationList().getMedication(1).getSubstance());
+            System.out.format("\nWhat do you want the new dosage to be of %s?\n", currentPatient.getMedicationList().getMedication(1).getSubstance());
             String newDosage = bScan.nextLine();
             currentPatient.getMedicationList().changeMedicationDosage(1, newDosage);
          }
@@ -393,11 +387,9 @@ class Administration {
             System.out.println("Of which medication would you like to alter the dose?\n");
 
             System.out.println("0: Don't change anything\n");
-            int i = 0;
-            for (Medication medication : currentPatient.getMedicationList().getAllMedicationData()) {
-               i++;
-               System.out.format("%d: Substance: %s\n   type: %s\n   dosage: %s\n\n", i, medication.getSubstance(), medication.getType(), medication.getDose());
-            }
+
+            currentPatient.getMedicationList().printMedications();
+
             System.out.format("%d: Change the dosage of all of them\n", currentPatient.getMedicationList().getAmountOfMedication() + 1);
 
             System.out.print("\nEnter choice: ");
@@ -418,17 +410,22 @@ class Administration {
 
    private void deleteMedication() {
       if (currentPatient.getMedicationList().getAmountOfMedication() == 0) {
-         System.out.println("There is no medication to delete, first prescribe medication\n");
-      } else {
+         System.out.println("\nThere is no medication to delete, first prescribe medication\n");
+      } else if (currentPatient.getMedicationList().getAmountOfMedication() == 1) {
+         System.out.format("\nWould you like to delete %s?\n", currentPatient.getMedicationList().getMedication(1).getSubstance());
+         System.out.println("yes/no");
+         if (userTypesYesOrNo(bScan.nextLine())) {
+            currentPatient.getMedicationList().deleteMedication(1);
+         }
+      }
+      else {
          System.out.println("What medication would you like to delete? Type the corresponding number(s) of the medication you would like to change; if there are multiple numbers, divide them with a comma ex. 4,5,6 (you cant choose 0 and \"all of them\" with other digits):\n");
 
          System.out.println("0: Delete nothing and return");
-         int i = 0;
-         for (Medication medication : currentPatient.getMedicationList().getAllMedicationData()) {
-            i++;
-            System.out.format("\n%d: Substance: %s\n   type: %s\n   dosage: %s\n", i, medication.getSubstance(), medication.getType(), medication.getDose());
-         }
-         System.out.format("\n%d: Delete all of the medication\n", currentPatient.getMedicationList().getAmountOfMedication() + 1);
+
+         currentPatient.getMedicationList().printMedications();
+
+         System.out.format("%d: Delete all of the medication\n", currentPatient.getMedicationList().getAmountOfMedication() + 1);
 
          System.out.print("\nEnter Choice: ");
 
@@ -483,7 +480,7 @@ class Administration {
 
             case ADD_PATIENT -> addPatient();
 
-            case REMOVE_PATIENTS -> deletePatients();
+            case DELETE_PATIENTS -> deletePatients();
 
             case ADD_MEDICATION -> addMedication();
 

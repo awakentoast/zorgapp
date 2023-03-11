@@ -27,8 +27,4 @@ public class Medication {
     public String getSubstance() {
         return substance;
     }
-
-    public void printMedicine() {
-        System.out.format("Substance: %s, type: %s, dosage: %s", substance, type, dose);
-    }
 }

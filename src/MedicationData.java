@@ -42,4 +42,14 @@ public class MedicationData {
         medicationList.remove(index - 1);
         amountOfMedication--;
     }
+
+    public void printMedications() {
+        int i = 0;
+        for (Medication medication : medicationList) {
+            i++;
+            System.out.format("%d: Substance: %s\n", i, medication.getSubstance());
+            System.out.format("   Type: %s\n", medication.getType());
+            System.out.format("   Dosage: %s\n\n", medication.getDose());
+        }
+    }
 }

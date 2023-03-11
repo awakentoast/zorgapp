@@ -30,7 +30,14 @@ public class UserData {
     }
 
     public User getUser(int i) {return allUsers.get(i - 1);}
-    public ArrayList<User> getUserData() {return allUsers;}
 
     public int getAmountOfUsers() {return amountOfUsers;}
+
+    public void printUsers() {
+        int i = 0;
+        for (User user : allUsers) {
+            i++;
+            System.out.format("%d: %s [%s]\n", i, user.getUserName(), user.getOccupation());
+        }
+    }
 }

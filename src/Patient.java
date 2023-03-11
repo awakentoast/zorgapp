@@ -56,10 +56,7 @@ class Patient
          if (medicationList.getAmountOfMedication() == 0) {
             System.out.println("no current medication administered\n");
          } else {
-            for (Medication medication : medicationList.getAllMedicationData()) {
-               System.out.println("  - " + medication.getSubstance());
-               System.out.println("     -" + medication.getDose());
-            }
+            medicationList.printMedications();
             System.out.println();
          }
       }
