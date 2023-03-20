@@ -18,4 +18,17 @@ public class PhysicalTherapist extends User {
     public boolean getMedicationInsightAuthorization() {
         return false;
     }
+
+    @Override
+    public BillingData getListOfBillings() {
+        BillingData bills = new BillingData();
+        bills.addBill(Bill.physicalTherapistBill("Standard procedure", 17.50));
+        bills.addBill(Bill.physicalTherapistBill("Taping", 25.00));
+        bills.addBill(Bill.physicalTherapistBill("Mobilization", 25.00));
+        bills.addBill(Bill.physicalTherapistBill("Massage", 25.00));
+        bills.addBill(Bill.physicalTherapistBill("manual therapy", 50.00));
+        bills.addBill(Bill.physicalTherapistBill("Dry needling", 50.00));
+        bills.addBill(Bill.physicalTherapistBill("Usage of exercise band", 5.00));
+        return bills;
+    }
 }

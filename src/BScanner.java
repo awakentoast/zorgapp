@@ -91,6 +91,7 @@ class BScanner
    ////////////////////////////////////////////////////////////////////////////////
 
    public int[] nextInts(int lowerBound, int upperBound) {
+      //lower bound is 1 and not return, upperBound is the highest choice not 'add all numbers'
       while (true) {
          String r = nextLine();
 

@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 abstract class User {
    protected final String userName;
    protected final int    userID;
@@ -25,8 +27,11 @@ abstract class User {
       return true;
    }
 
+
    protected User(int id, String name) {
       this.userID = id;
       this.userName = name;
    }
+
+   public abstract BillingData getListOfBillings();
 }

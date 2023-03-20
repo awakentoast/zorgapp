@@ -22,10 +22,11 @@ class Administration {
    static final int ADD_USER = 5;
    static final int ADD_PATIENT = 6;
    static final int DELETE_PATIENTS = 7;
-   static final int ADD_MEDICATION = 8;
-   static final int CHANGE_MEDICATION = 9;
-
-   static final int DELETE_MEDICATION = 10;
+   static final int ADD_BILL = 8;
+   static final int DISPLAY_BILLING_HISTORY = 9;
+   static final int ADD_MEDICATION = 10;
+   static final int CHANGE_MEDICATION = 11;
+   static final int DELETE_MEDICATION = 12;
 
    //choices for the patient data, change the max number in change patient and add patient when adding a new field that the user inputs
    static final int RETURN = 0;
@@ -58,15 +59,20 @@ class Administration {
       allUsers.addUser(new PhysicalTherapist(3, "Kenzo Tenma"));
 
       MedicationData medicationPatient1 = new MedicationData();
-      allPatients.addPatient(new Patient(1, "Duck", "Donald", LocalDate.of(1934, 6, 9),30, 130, medicationPatient1));
+      BillingData billingsPatient1 = new BillingData();
+      allPatients.addPatient(new Patient(1, "Duck", "Donald", LocalDate.of(1934, 6, 9),30, 130, medicationPatient1, billingsPatient1));
       MedicationData medicationPatient2 = new MedicationData();
-      allPatients.addPatient(new Patient(2, "Baldy", "Caped", LocalDate.of(1997, 6, 9),75, 175, medicationPatient2));
+      BillingData billingsPatient2 = new BillingData();
+      allPatients.addPatient(new Patient(2, "Baldy", "Caped", LocalDate.of(1997, 6, 9),75, 175, medicationPatient2, billingsPatient2));
       MedicationData medicationPatient3 = new MedicationData();
-      allPatients.addPatient(new Patient(3, "Henkema", "Henk", LocalDate.of(1999, 9, 9),50, 160, medicationPatient3));
+      BillingData billingsPatient3 = new BillingData();
+      allPatients.addPatient(new Patient(3, "Henkema", "Henk", LocalDate.of(1999, 9, 9),50, 160, medicationPatient3, billingsPatient3));
       MedicationData medicationPatient4 = new MedicationData();
-      allPatients.addPatient(new Patient(4, "White", "Walter", LocalDate.of(1958, 9, 7),98, 191, medicationPatient4));
+      BillingData billingsPatient4 = new BillingData();
+      allPatients.addPatient(new Patient(4, "White", "Walter", LocalDate.of(1958, 9, 7),98, 191, medicationPatient4,billingsPatient4));
       MedicationData medicationPatient5 = new MedicationData();
-      allPatients.addPatient(new Patient(5, "Hat", "Straw", LocalDate.of(2004, 5, 5),64, 174, medicationPatient5));
+      BillingData billingsPatient5 = new BillingData();
+      allPatients.addPatient(new Patient(5, "Hat", "Straw", LocalDate.of(2004, 5, 5),64, 174, medicationPatient5, billingsPatient5));
 
       currentPatient = allPatients.getPatient(1);
       currentUser = allUsers.getUser(1);
@@ -162,7 +168,7 @@ class Administration {
                case 1 -> allUsers.addUser(new GeneralPractitioner(size / 2 + i + 1, firstname + " " + surname));
                case 2 -> allUsers.addUser(new Dentist(size / 2 + i + 1, firstname + " " + surname));
                case 3 -> allUsers.addUser(new PhysicalTherapist(size / 2 + i + 1, firstname + " " + surname));
-               default -> System.out.format("You did an oopsie in adduser switch case, number [%d]\n", occupationIndex);
+               default -> System.out.format("You did an oopsie in adduser switch case, number [%d] :3\n", occupationIndex);
             }
          }
 
@@ -267,9 +273,10 @@ class Administration {
             } while (length >= 1 && length <= 273);
 
             MedicationData medicationList = new MedicationData();
+            BillingData billings = new BillingData();
 
             // adding the patient here so because the medicationList is an object that can always be altered
-            allPatients.addPatient(new Patient(size + i, surname, firstname, born, weight, length, medicationList));
+            allPatients.addPatient(new Patient(size + i, surname, firstname, born, weight, length, medicationList, billings));
             if (!currentUser.getMedicationEditingAuthorization()) {
                System.out.println("You are not authorized to add any medication");
             } else {
@@ -278,6 +285,9 @@ class Administration {
                currentPatient = allPatients.getPatient(allPatients.getAmountOfPatients());
                if (userTypesYesOrNo(bScan.nextLine())) {
                   addMedication();
+               }
+               else{
+                  System.out.println("The patient doesn't use any medication");
                }
             }
          }
@@ -341,7 +351,7 @@ class Administration {
       if (!currentUser.getMedicationEditingAuthorization()) {
          System.out.println("You are not authorized to add medication\n");
       } else {
-         System.out.println("What medication would you like to add? Type the corresponding number(s) of the medication you would like to change; if there are multiple numbers, divide them with a comma ex. 4,5,6 (you cant choose 0 and \"all of them\" with other digits):\n");
+         System.out.println("What medication would you like to add? Type the corresponding number(s) of the medication you would like to change; if there are multiple numbers, divide them with a comma ex. 1,2,3 (you cant choose 0 and \"all of them\" with other digits):\n");
 
          System.out.println("0: Add nothing and return");
          int i = 0;
@@ -417,9 +427,12 @@ class Administration {
          if (userTypesYesOrNo(bScan.nextLine())) {
             currentPatient.getMedicationList().deleteMedication(1);
          }
+         else{
+            System.out.println("You have chosen not to delete the medication");
+         }
       }
       else {
-         System.out.println("What medication would you like to delete? Type the corresponding number(s) of the medication you would like to change; if there are multiple numbers, divide them with a comma ex. 4,5,6 (you cant choose 0 and \"all of them\" with other digits):\n");
+         System.out.println("What medication would you like to delete? Type the corresponding number(s) of the medication you would like to change; if there are multiple numbers, divide them with a comma ex. 1,2,3 (you cant choose 0 and \"all of them\" with other digits):\n");
 
          System.out.println("0: Delete nothing and return");
 
@@ -454,6 +467,44 @@ class Administration {
    }
 
 
+   private void addBillToPatient() {
+      System.out.println("\nWhich procedure(s) would you like to bill the patient Type the corresponding number(s) of the procedure you would like to bill; if there are multiple numbers, divide them with a comma ex. 1,2,3 (you cant choose 0 and \\\"all of them\\\" with other digits)?\n");
+
+      System.out.println("0: Delete nothing and return");
+      currentUser.getListOfBillings().printAllBillsWithIndex();
+      System.out.format("%d: Bill all procedures\n", currentUser.getListOfBillings().getAmountOfBills() + 1);
+
+      System.out.print("\nEnter choice: ");
+      int[] billsToBeAdded =  bScan.nextInts(1, currentUser.getListOfBillings().getAmountOfBills());
+
+      System.out.println("Are you sure you want to bill these bills to the patient");
+      System.out.println("yes/no");
+
+      String yesOrNo = bScan.nextLine();
+      if (billsToBeAdded[0] != 0 && userTypesYesOrNo(yesOrNo)) {
+         for (int billToBeAdded : billsToBeAdded) {
+            currentPatient.addBill(currentUser.getListOfBillings().getBill(billToBeAdded));
+         }
+      }
+      if (!userTypesYesOrNo(yesOrNo)) {
+         System.out.println("You have chosen not to bill the patient");
+      }
+      System.out.println();
+   }
+
+
+   private void displayBillingHistory() {
+      if (currentPatient.getBillings().getAmountOfBills() == 0) {
+         System.out.println("The patient has no billing history");
+      }
+      else {
+         System.out.println("\nBilling history:");
+         currentPatient.getBillings().printBillingHistory(currentUser.getOccupation());
+         System.out.printf("Total: € %.2f\n\n", currentPatient.getBillings().getTotalCostOfBillings());
+      }
+   }
+
+
    void menu() {
       boolean nextCycle = true;
       while (nextCycle) {
@@ -468,7 +519,7 @@ class Administration {
          switch (choice) {
             case STOP -> nextCycle = false; // interrupts the loop
 
-            case VIEW -> currentPatient.viewData(currentUser.getMedicationInsightAuthorization());
+            case VIEW -> currentPatient.viewData(currentUser);
 
             case SWAP_USER -> swapUser();
 
@@ -487,6 +538,10 @@ class Administration {
             case CHANGE_MEDICATION -> changeMedicationDosage();
 
             case DELETE_MEDICATION -> deleteMedication();
+
+            case ADD_BILL -> addBillToPatient();
+
+            case DISPLAY_BILLING_HISTORY -> displayBillingHistory();
 
             default -> System.out.format("you did an oopsie :3 [%d]\n", choice);
          }

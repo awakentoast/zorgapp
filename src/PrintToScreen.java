@@ -14,12 +14,15 @@ public class PrintToScreen {
         System.out.format("%d:  Add an user/users\n", 5);
         System.out.format("%d:  Add a patient/patients\n", 6);
         System.out.format("%d:  Remove a patient/patients\n", 7);
+        System.out.format("%d:  Add bill\n", 8);
+        System.out.format("%d:  Display billing history\n", 9);
 
         if (ChangeMedication) {
-            System.out.format("%d:  Add medication\n", 8);
-            System.out.format("%d:  Change medication dosage\n", 9);
-            System.out.format("%d:  Delete medication from patient\n", 10);
+            System.out.format("%d:  Add medication\n", 10);
+            System.out.format("%d:  Change medication dosage\n", 11);
+            System.out.format("%d:  Delete medication from patient\n", 12);
         }
+
 
         System.out.print("\nEnter #choice: ");
     }
