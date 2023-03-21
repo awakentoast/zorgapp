@@ -17,7 +17,7 @@ public class GeneralPractitioner extends User {
     }
 
     @Override
-    public BillingData getListOfBillings() {
+    public BillingData getListOfBillingsForOccupation() {
         BillingData bills = new BillingData();
         bills.addBill(Bill.generalPractitionerBill("Consultancy", 21.50));
         bills.addBill(Bill.generalPractitionerBill("Home visit", 43.00));

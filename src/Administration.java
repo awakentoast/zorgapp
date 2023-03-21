@@ -368,12 +368,21 @@ class Administration {
 
          if (medicationsToBeAdded[0] != 0) {
             for (int medicationToBeAdded : medicationsToBeAdded) {
-               System.out.format("What dosage would you like to prescribe for %s?\n", allMedications.getMedication(medicationToBeAdded).getSubstance());
-               String medicationPrescription = bScan.nextLine();
-               Medication medication = allMedications.getMedication(medicationToBeAdded);
-               medication.setDose(medicationPrescription);
-               currentPatient.addMedication(medication);
-               System.out.println();
+               boolean add = true;
+               for (Medication medication : currentPatient.getMedicationList().getAllMedicationData()) {
+                  if (Objects.equals(medication.getSubstance(), allMedications.getMedication(medicationToBeAdded).getSubstance())) {
+                     add = false;
+                     break;
+                  }
+               }
+               if (add) {
+                  System.out.format("What dosage would you like to prescribe for %s?\n", allMedications.getMedication(medicationToBeAdded).getSubstance());
+                  String medicationPrescription = bScan.nextLine();
+                  Medication medication = allMedications.getMedication(medicationToBeAdded);
+                  medication.setDose(medicationPrescription);
+                  currentPatient.addMedication(medication);
+                  System.out.println();
+               }
             }
          }
       }
@@ -398,7 +407,7 @@ class Administration {
 
             System.out.println("0: Don't change anything\n");
 
-            currentPatient.getMedicationList().printMedications();
+            currentPatient.printMedicationPatient();
 
             System.out.format("%d: Change the dosage of all of them\n", currentPatient.getMedicationList().getAmountOfMedication() + 1);
 
@@ -436,7 +445,7 @@ class Administration {
 
          System.out.println("0: Delete nothing and return");
 
-         currentPatient.getMedicationList().printMedications();
+         currentPatient.printMedicationPatient();
 
          System.out.format("%d: Delete all of the medication\n", currentPatient.getMedicationList().getAmountOfMedication() + 1);
 
@@ -470,12 +479,12 @@ class Administration {
    private void addBillToPatient() {
       System.out.println("\nWhich procedure(s) would you like to bill the patient Type the corresponding number(s) of the procedure you would like to bill; if there are multiple numbers, divide them with a comma ex. 1,2,3 (you cant choose 0 and \\\"all of them\\\" with other digits)?\n");
 
-      System.out.println("0: Delete nothing and return");
-      currentUser.getListOfBillings().printAllBillsWithIndex();
-      System.out.format("%d: Bill all procedures\n", currentUser.getListOfBillings().getAmountOfBills() + 1);
+      System.out.println("0: Return");
+      currentUser.getListOfBillingsForOccupation().printAllBillsWithIndex();
+      System.out.format("%d: Bill all procedures\n", currentUser.getListOfBillingsForOccupation().getAmountOfBills() + 1);
 
       System.out.print("\nEnter choice: ");
-      int[] billsToBeAdded =  bScan.nextInts(1, currentUser.getListOfBillings().getAmountOfBills());
+      int[] billsToBeAdded =  bScan.nextInts(1, currentUser.getListOfBillingsForOccupation().getAmountOfBills());
 
       System.out.println("Are you sure you want to bill these bills to the patient");
       System.out.println("yes/no");
@@ -483,7 +492,7 @@ class Administration {
       String yesOrNo = bScan.nextLine();
       if (billsToBeAdded[0] != 0 && userTypesYesOrNo(yesOrNo)) {
          for (int billToBeAdded : billsToBeAdded) {
-            currentPatient.addBill(currentUser.getListOfBillings().getBill(billToBeAdded));
+            currentPatient.addBill(currentUser.getListOfBillingsForOccupation().getBill(billToBeAdded));
          }
       }
       if (!userTypesYesOrNo(yesOrNo)) {
@@ -494,13 +503,13 @@ class Administration {
 
 
    private void displayBillingHistory() {
-      if (currentPatient.getBillings().getAmountOfBills() == 0) {
-         System.out.println("The patient has no billing history");
+      if (currentPatient.getBillingsPatient().getAmountOfBills() == 0) {
+         System.out.println("The patient has no billing history\n");
       }
       else {
          System.out.println("\nBilling history:");
-         currentPatient.getBillings().printBillingHistory(currentUser.getOccupation());
-         System.out.printf("Total: € %.2f\n\n", currentPatient.getBillings().getTotalCostOfBillings());
+         currentPatient.printBillingPatient(currentUser.getOccupation());
+         System.out.printf("Total: € %.2f\n\n", currentPatient.getBillingsPatient().getTotalCostOfBillings());
       }
    }
 

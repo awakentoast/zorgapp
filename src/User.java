@@ -1,6 +1,5 @@
-import java.util.ArrayList;
 
-abstract class User {
+ abstract class User {
    protected final String userName;
    protected final int    userID;
 
@@ -15,9 +14,7 @@ abstract class User {
       return userID;
    }
 
-   public String getOccupation() {
-      return "User";
-   }
+   public abstract String getOccupation();
 
    public boolean getMedicationEditingAuthorization() {
       return true;
@@ -33,5 +30,5 @@ abstract class User {
       this.userName = name;
    }
 
-   public abstract BillingData getListOfBillings();
+   public abstract BillingData getListOfBillingsForOccupation();
 }

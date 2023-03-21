@@ -20,7 +20,7 @@ public class PhysicalTherapist extends User {
     }
 
     @Override
-    public BillingData getListOfBillings() {
+    public BillingData getListOfBillingsForOccupation() {
         BillingData bills = new BillingData();
         bills.addBill(Bill.physicalTherapistBill("Standard procedure", 17.50));
         bills.addBill(Bill.physicalTherapistBill("Taping", 25.00));

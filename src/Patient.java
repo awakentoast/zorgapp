@@ -12,7 +12,6 @@ class Patient
    private double    weight;
    private double    length;
    private final MedicationData medicationList;
-
    private final BillingData billings;
 
    public int calcAge(LocalDate born) {
@@ -97,13 +96,14 @@ class Patient
       return medicationList;
    }
 
-   public BillingData getBillings() {
+   public BillingData getBillingsPatient() {
       return billings;
    }
 
    public void addBill(Bill bill) {
       billings.addBill(bill);
    }
+
 
    public void printBillingHistory(User user) {
       String occupation = user.getOccupation();
@@ -116,5 +116,13 @@ class Patient
          }
       }
       System.out.printf("\ntotal: %f.2", total);
+   }
+
+   public void printMedicationPatient() {
+      medicationList.printMedications();
+   }
+
+   public void printBillingPatient(String occupation) {
+      billings.printBillingHistory(occupation);
    }
 }

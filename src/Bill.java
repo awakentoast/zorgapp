@@ -1,6 +1,6 @@
 public record Bill(String occupation, String procedure, double price) {
     public static Bill dentistBill(String procedure, double price) {
-       return new Bill("Dentist", procedure, price);
+        return new Bill("Dentist", procedure, price);
     }
 
     public static Bill physicalTherapistBill(String procedure, double price) {
