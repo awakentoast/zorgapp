@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class MedicationData {
 
@@ -9,7 +10,7 @@ public class MedicationData {
         //TODO document why this constructor is empty
     }
 
-    public ArrayList<Medication> getAllMedicationData() {
+    public List<Medication> getAllMedicationData() {
         return medicationList;
     }
 

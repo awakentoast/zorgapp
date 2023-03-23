@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -11,8 +12,8 @@ class Patient
    private LocalDate dateOfBirth;
    private double    weight;
    private double    length;
-   private final MedicationData medicationList;
-   private final BillingData billings;
+   private final MedicationData medicationList = new MedicationData();
+   private final BillingData billings = new BillingData();
 
    public int calcAge(LocalDate born) {
       return Period.between(born, LocalDate.from(java.time.LocalDateTime.now())).getYears();
@@ -25,15 +26,13 @@ class Patient
    ////////////////////////////////////////////////////////////////////////////////
    // Constructor
    ////////////////////////////////////////////////////////////////////////////////
-   Patient(int id, String surname, String firstName, LocalDate dateOfBirth, double weight, double length, MedicationData medicationList, BillingData billings) {
+   Patient(int id, String surname, String firstName, LocalDate dateOfBirth, double weight, double length) {
       this.id = id;
       this.surname = surname;
       this.firstName = firstName;
       this.dateOfBirth = dateOfBirth;
       this.weight = weight;
       this.length = length;
-      this.medicationList = medicationList;
-      this.billings = billings;
    }
 
    ////////////////////////////////////////////////////////////////////////////////
@@ -89,19 +88,23 @@ class Patient
    public void setFirstName(String firstname) {this.firstName = firstname;}
 
    public void addMedication(Medication medication) {
-      medicationList.addMedication(medication);
+      this.medicationList.addMedication(medication);
    }
 
-   public MedicationData getMedicationList() {
-      return medicationList;
+   public List<Medication> getMedicationPatient() {
+      return this.medicationList.getAllMedicationData();
    }
+
+   public int getAmountOfMedicationPatient() { return this.medicationList.getAmountOfMedication(); }
+
+   public MedicationData getMedicationList() { return this.medicationList; }
 
    public BillingData getBillingsPatient() {
-      return billings;
+      return this.billings;
    }
 
    public void addBill(Bill bill) {
-      billings.addBill(bill);
+      this.billings.addBill(bill);
    }
 
 
@@ -109,7 +112,7 @@ class Patient
       String occupation = user.getOccupation();
       double total = 0;
 
-      for (Bill bill : billings.getBillings()) {
+      for (Bill bill : this.billings.getBillings()) {
          if (Objects.equals(bill.occupation(), occupation)) {
             System.out.printf("%s: %f.2",bill.procedure(), bill.price());
             total += bill.price();
@@ -119,10 +122,10 @@ class Patient
    }
 
    public void printMedicationPatient() {
-      medicationList.printMedications();
+      this.medicationList.printMedications();
    }
 
    public void printBillingPatient(String occupation) {
-      billings.printBillingHistory(occupation);
+      this.billings.printBillingHistory(occupation);
    }
 }

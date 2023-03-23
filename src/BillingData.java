@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class BillingData {
@@ -45,7 +46,7 @@ public class BillingData {
         return totalCostOfBillings;
     }
 
-    public ArrayList<Bill> getBillings() {
+    public List<Bill> getBillings() {
         return billings;
     }
 }
