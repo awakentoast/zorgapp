@@ -19,16 +19,16 @@ public class BillingData {
     public void printBillingHistory(String occupation) {
         for (Bill bill : billings) {
             if (Objects.equals(occupation, bill.occupation())) {
-            System.out.printf("%s  € %.2f\n", bill.procedure(), bill.price());
+            System.out.printf("%s  € %.2f [%s]\n", bill.procedure(), bill.price(), bill.date().toString());
             }
         }
     }
 
-    public void printAllBillsWithIndex() {
+    public void printAllBillsWithIndexWithoutDate() {
         int count = 0;
         for (Bill bill : billings) {
             count += 1;
-            System.out.printf("%d: %s  € %.2f\n",count, bill.procedure(), bill.price());
+            System.out.printf("%d: %s  € %.2f\n", count, bill.procedure(), bill.price());
         }
     }
 

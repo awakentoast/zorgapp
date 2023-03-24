@@ -70,7 +70,7 @@ class Administration {
 
 
    public static boolean userTypesYesOrNo(String yesOrNo) {
-      return (Objects.equals(yesOrNo.toLowerCase(), "yes"));
+      return yesOrNo.equalsIgnoreCase("yes");
    }
 
    private void swapUser() {
@@ -79,7 +79,7 @@ class Administration {
       }
       else if (allUsers.getAmountOfUsers() == 1) {
             System.out.println("You are the only registered user in the system, please add more users if you would like to switch user\n");
-         }
+      }
       else {
          System.out.println("\nWhat user do you want to switch to?");
 
@@ -116,6 +116,7 @@ class Administration {
 
          int patientToSwitchTo = bScan.nextInt(1, allPatients.getAmountOfPatients());
          currentPatient = allPatients.getPatient(patientToSwitchTo);
+         currentPatient = allPatients.getPatient(patientToSwitchTo);
 
          System.out.println();
       }
@@ -133,7 +134,8 @@ class Administration {
       System.out.println("yes/no");
       if (!userTypesYesOrNo(bScan.nextLine()) || amountOfAddedUsers == 0) {
          System.out.println("You have chosen not to add any users\n");
-      } else {
+      }
+      else {
          for (int i = 1; i <= amountOfAddedUsers; i++) {
             System.out.format("\nNew User [%d]:\n", size / 2 + i + 1);
 
@@ -233,9 +235,10 @@ class Administration {
 
       System.out.format("\nAre you sure you want to add %d amount of users\n", amountOfAddedPatients);
       System.out.println("yes/no");
-      if (userTypesYesOrNo(bScan.nextLine()) || amountOfAddedPatients == 0) {
-         System.out.println("You have chosen not to add any patients\n");
-      } else {
+      if (!userTypesYesOrNo(bScan.nextLine()) || amountOfAddedPatients == 0) {
+         System.out.println("\nYou have chosen not to add any patients\n");
+      }
+      else {
          for (int i = 1; i <= amountOfAddedPatients; i++) {
             System.out.format("\nNew Patient [%d]:\n", size + i);
 
@@ -259,7 +262,6 @@ class Administration {
                System.out.println("What do you want the length of the new patient to be? (cm)");
                length = bScan.nextDouble(1, 273,  "The length must be between 1 cm and 273 cm, new length:");
             } while (length < 1 || length > 273);
-
 
 
             // adding the patient here so because the medicationList is an object that can always be altered
@@ -321,6 +323,7 @@ class Administration {
                usersToBeDeleted[j] = usersToBeDeleted[usersToBeDeleted.length - j - 1];
                usersToBeDeleted[usersToBeDeleted.length - j - 1] = temp;
             }
+
             for (int k : usersToBeDeleted) {
                allPatients.deletePatient(k);
             }
@@ -363,6 +366,7 @@ class Administration {
                      break;
                   }
                }
+
                if (add) {
                   System.out.format("What dosage would you like to prescribe for %s?\n", allMedications.getMedication(medicationToBeAdded).getSubstance());
                   String medicationPrescription = bScan.nextLine();
@@ -424,8 +428,8 @@ class Administration {
          if (userTypesYesOrNo(bScan.nextLine())) {
             currentPatient.getMedicationList().deleteMedication(1);
          }
-         else{
-            System.out.println("You have chosen not to delete the medication");
+         else {
+            System.out.println("You have chosen to not delete the medication");
          }
       }
       else {
@@ -468,7 +472,7 @@ class Administration {
       System.out.println("\nWhich procedure(s) would you like to bill the patient Type the corresponding number(s) of the procedure you would like to bill; if there are multiple numbers, divide them with a comma ex. 1,2,3 (you cant choose 0 and \\\"all of them\\\" with other digits)?\n");
 
       System.out.println("0: Return");
-      currentUser.getListOfBillingsForOccupation().printAllBillsWithIndex();
+      currentUser.getListOfBillingsForOccupation().printAllBillsWithIndexWithoutDate();
       System.out.format("%d: Bill all procedures\n", currentUser.getListOfBillingsForOccupation().getAmountOfBills() + 1);
 
       System.out.print("\nEnter choice: ");
@@ -480,7 +484,16 @@ class Administration {
       String yesOrNo = bScan.nextLine();
       if (billsToBeAdded[0] != 0 && userTypesYesOrNo(yesOrNo)) {
          for (int billToBeAdded : billsToBeAdded) {
-            currentPatient.addBill(currentUser.getListOfBillingsForOccupation().getBill(billToBeAdded));
+            Bill bill = currentUser.getListOfBillingsForOccupation().getBill(billToBeAdded);
+            System.out.println(bill.price());
+            Bill tempBill = null;
+            switch (bill.occupation()) {
+               case "Dentist" -> tempBill = Bill.dentistBill(bill.procedure(), bill.price(), LocalDate.from(java.time.LocalDateTime.now()));
+               case "General Practitioner" -> tempBill = Bill.generalPractitionerBill(bill.procedure(), bill.price(), LocalDate.from(java.time.LocalDateTime.now()));
+               case "Physical Therapist" -> tempBill = Bill.physicalTherapistBill(bill.procedure(), bill.price(), LocalDate.from(java.time.LocalDateTime.now()));
+               default -> System.out.println("you did an oopsie in addBillToPatient :3");
+            }
+            currentPatient.addBill(tempBill);
          }
       }
       if (!userTypesYesOrNo(yesOrNo)) {

@@ -24,11 +24,10 @@
       return true;
    }
 
+   public abstract BillingData getListOfBillingsForOccupation();
 
    protected User(int id, String name) {
       this.userID = id;
       this.userName = name;
    }
-
-   public abstract BillingData getListOfBillingsForOccupation();
 }

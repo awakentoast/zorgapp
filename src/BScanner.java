@@ -148,7 +148,7 @@ class BScanner
          if (correct == numbers.length) {
             return numbers;
          } else {
-            System.out.println("Please enter a valid digit/valid digits ex. [1,2,3]");
+            System.out.printf("Please enter a valid digit/valid digits ex. [1,2,3] between %d and %d", lowerBound - 1 , upperBound + 1);
          }
       }
    }
