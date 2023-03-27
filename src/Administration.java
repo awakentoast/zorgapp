@@ -1,5 +1,5 @@
 import java.time.LocalDate;
-import java.util.Objects;
+import java.util.*;
 
 ///////////////////////////////////////////////////////////////////////////
 // class Administration represents the core of the application by showing
@@ -24,9 +24,13 @@ class Administration {
    static final int DELETE_PATIENTS = 7;
    static final int ADD_BILL = 8;
    static final int DISPLAY_BILLING_HISTORY = 9;
-   static final int ADD_MEDICATION = 10;
-   static final int CHANGE_MEDICATION = 11;
-   static final int DELETE_MEDICATION = 12;
+   static final int DISPLAY_BMI_CHART = 10;
+   static final int DISPLAY_LUNG_CAPACITY_CHART = 11;
+   static final int VIEW_ALL_PATIENTS = 12;
+   static final int ADD_MEDICATION = 13;
+   static final int CHANGE_MEDICATION = 14;
+   static final int DELETE_MEDICATION = 15;
+
 
    //choices for the patient data, change the max number in change patient and add patient when adding a new field that the user inputs
    static final int RETURN = 0;
@@ -35,6 +39,7 @@ class Administration {
    static final int DATEOFBIRTH = 3;
    static final int WEIGHT = 4;
    static final int LENGTH = 5;
+   static final int LUNG_CAPACITY = 6;
 
 
    private Patient currentPatient;
@@ -58,11 +63,35 @@ class Administration {
       allUsers.addUser(new Dentist(2, "Barry Batsbak"));
       allUsers.addUser(new PhysicalTherapist(3, "Kenzo Tenma"));
 
-      allPatients.addPatient(new Patient(1, "Duck", "Donald", LocalDate.of(1934, 6, 9),30, 130));
-      allPatients.addPatient(new Patient(2, "Baldy", "Caped", LocalDate.of(1997, 6, 9),75, 175));
-      allPatients.addPatient(new Patient(3, "Henkema", "Henk", LocalDate.of(1999, 9, 9),50, 160));
-      allPatients.addPatient(new Patient(4, "White", "Walter", LocalDate.of(1958, 9, 7),98, 191));
-      allPatients.addPatient(new Patient(5, "Hat", "Straw", LocalDate.of(2004, 5, 5),64, 174));
+      allPatients.addPatient(new Patient(1, "White", "Walter", LocalDate.of(1958, 9, 7),93, 191, 3.0));
+      allPatients.addPatient(new Patient(2, "Baldy", "Caped", LocalDate.of(1997, 6, 9),10, 175, 9.0));
+      allPatients.addPatient(new Patient(3, "Duck", "Donald", LocalDate.of(1934, 6, 9),10, 130, 2.5));
+      allPatients.addPatient(new Patient(4, "Henkema", "Henk", LocalDate.of(1999, 9, 9),50, 160, 3.6));
+      allPatients.addPatient(new Patient(5, "Hat", "Straw", LocalDate.of(2004, 5, 5),64, 174, 7.4));
+
+      allPatients.getPatient(1).setWeight(100);
+      allPatients.getPatient(1).addBMI();
+      allPatients.getPatient(1).setWeight(100);
+      allPatients.getPatient(1).addBMI();
+      allPatients.getPatient(1).setWeight(100);
+      allPatients.getPatient(1).addBMI();
+      allPatients.getPatient(1).setWeight(100);
+      allPatients.getPatient(1).addBMI();
+      allPatients.getPatient(1).setWeight(100);
+      allPatients.getPatient(1).addBMI();
+
+      allPatients.getPatient(1).setWeight(80);
+      allPatients.getPatient(1).addBMI();
+      allPatients.getPatient(1).setWeight(80);
+      allPatients.getPatient(1).addBMI();
+      allPatients.getPatient(1).setWeight(80);
+      allPatients.getPatient(1).addBMI();
+      allPatients.getPatient(1).setWeight(150);
+      allPatients.getPatient(1).addBMI();
+
+
+//      allPatients.getPatient(1).setWeight(55);
+//      allPatients.getPatient(1).addBMI();
 
       currentPatient = allPatients.getPatient(1);
       currentUser = allUsers.getUser(1);
@@ -115,7 +144,6 @@ class Administration {
          System.out.print("\nEnter choice: ");
 
          int patientToSwitchTo = bScan.nextInt(1, allPatients.getAmountOfPatients());
-         currentPatient = allPatients.getPatient(patientToSwitchTo);
          currentPatient = allPatients.getPatient(patientToSwitchTo);
 
          System.out.println();
@@ -181,9 +209,15 @@ class Administration {
       PrintToScreen.printPatientParameters();
 
       //prevents for anything but integers and 1,2 integers being passed along
-      int[] fieldsToBeChanged = bScan.nextInts(1, LENGTH);
+      int[] fieldsToBeChanged = bScan.nextInts(1, LUNG_CAPACITY);
 
+      //done with a boolean, so you don't change the mbi twice if the patients length and weight get changed at once
+      boolean changeInBMI = false;
       for (int fieldToBeChanged : fieldsToBeChanged) {
+         if (fieldToBeChanged == LENGTH || fieldToBeChanged == WEIGHT)
+         {
+            changeInBMI = true;
+         }
          switch (fieldToBeChanged) {
 
             case RETURN -> System.out.println("You have chosen to not change the data");
@@ -220,9 +254,23 @@ class Administration {
                } while (length < 1 || length > 273);
                currentPatient.setLength(length);
             }
-            
+
+            case LUNG_CAPACITY -> {
+               double capacity;
+               do {
+                  System.out.println("What do you want the new lung capacity of the patient to be (L)");
+                  capacity = bScan.nextDouble(1, 273,"The capacity must be between 0.1L and 10L");
+               } while (capacity < 0.1 || capacity > 10);
+               currentPatient.setLungCapacity(capacity);
+            }
+
             default -> System.out.format("you made an oopsie :3 [%d]\n", fieldToBeChanged);
          }
+      }
+
+      if (changeInBMI)
+      {
+         currentPatient.addBMI();
       }
       System.out.println();
    }
@@ -264,8 +312,14 @@ class Administration {
             } while (length < 1 || length > 273);
 
 
+            double capacity;
+            do {
+               System.out.println("What do you want the new lung capacity of the patient to be (cm)");
+               capacity = bScan.nextDouble(1, 273,"The capacity must be between 0.1L and 10L");
+            } while (capacity < 0.1 || capacity > 10);
+
             // adding the patient here so because the medicationList is an object that can always be altered
-            allPatients.addPatient(new Patient(size + i, surname, firstname, born, weight, length));
+            allPatients.addPatient(new Patient(size + i, surname, firstname, born, weight, length, capacity));
             if (!currentUser.getMedicationEditingAuthorization()) {
                System.out.println("You are not authorized to add any medication");
             } else {
@@ -275,7 +329,7 @@ class Administration {
                if (userTypesYesOrNo(bScan.nextLine())) {
                   addMedication();
                }
-               else{
+               else {
                   System.out.println("The patient doesn't use any medication");
                }
             }
@@ -315,7 +369,7 @@ class Administration {
          System.out.println("yes/no");
 
          if (!userTypesYesOrNo(bScan.nextLine())) {
-            System.out.println("you didn't type yes so patients won't be deleted");
+            System.out.println("you didn't type yes so the patient(s) won't be deleted");
          } else {
             //reverses the numbers, so we don't get index errors when deleting multiple patients at once
             for (int j = 0; j < usersToBeDeleted.length / 2; j++) {
@@ -469,6 +523,7 @@ class Administration {
 
 
    private void addBillToPatient() {
+
       System.out.println("\nWhich procedure(s) would you like to bill the patient Type the corresponding number(s) of the procedure you would like to bill; if there are multiple numbers, divide them with a comma ex. 1,2,3 (you cant choose 0 and \\\"all of them\\\" with other digits)?\n");
 
       System.out.println("0: Return");
@@ -514,6 +569,212 @@ class Administration {
       }
    }
 
+   private String getColour(int bmi) {
+      //codes to make a string a certain color when printing to console,
+      //                      [red,        yellow,     green,
+      String[] colorCodes = {"\033[31m", "\033[33m", "\033[32m"};
+
+      if (bmi > 30) {
+         return colorCodes[0];
+      }
+      if (bmi > 25) {
+         return colorCodes[1];
+      }
+      if (bmi > 20) {
+         return colorCodes[2];
+      }
+      if (bmi > 15) {
+         return colorCodes[1];
+      }
+      return colorCodes[0];
+   }
+
+   private void printBMIChart() {
+      List<Double> bmiList = currentPatient.getBmiList();
+
+      System.out.println("\n".repeat(5));
+      ArrayList<StringBuilder> bmiChart = new ArrayList<>();
+
+      final String RESET = "\033[0m";
+
+      int sizeBmiChart = bmiList.size();
+      int upperValueYAxis = 35;
+      for (int rows = 0; rows < 24; rows++) {
+         StringBuilder line = new StringBuilder();
+
+         if (rows % 5 == 0) {
+            line.append(upperValueYAxis).append("|");
+            upperValueYAxis -= 5;
+         } else {
+            line.append("  |");
+         }
+
+         String filler = "=".repeat(210) + RESET;
+         line.append(filler);
+         bmiChart.add(line);
+      }
+
+      bmiChart.add(new StringBuilder( " ".repeat(3) + "-".repeat(210)));
+
+      System.out.printf("BMI chart %s (only last 10 entered bmi are shown):\n\n", currentPatient.fullName());
+
+      int value = 0;
+      for (int bmi = 35; bmi >= 12; bmi--) {
+         String colorAfterNumberInGraph = getColour(bmi);
+         bmiChart.get(bmi - 35 + value).insert(3, colorAfterNumberInGraph);
+         value += 2;
+      }
+
+      int[] altered = new int[24];
+      for (int i = 0; i < 24; i++) {
+         altered[i] = 0;
+      }
+
+      int bmiPrintOffset = -3;
+      // loop for drawing the bmi on chart
+      for (int i = Math.min(sizeBmiChart, 10); i > 0; i--) {
+         double b = bmiList.get(sizeBmiChart - i);
+         int bmi = (int) Math.round(b);
+
+         int rowToBeAltered = 0;
+
+         if (bmi <= 35 - sizeBmiChart) {
+            rowToBeAltered = bmiChart.size() - 2;
+         }
+         if (bmi > 35 - sizeBmiChart - 13 && bmi < 35) {
+            rowToBeAltered = Math.abs(bmi - 35);
+         }
+
+         String colorAfterNumberInGraph = getColour(bmi);
+
+         bmiPrintOffset += 21;
+         // alter[] exists because when adding the x with trail and head for colours there are more characters placed in the string so yuo need an extra offset
+         bmiChart.get(rowToBeAltered).replace(bmiPrintOffset + 9 * altered[Math.abs(bmi - 35)] - 1, bmiPrintOffset + 9 * altered[Math.abs(bmi - 35)] + 2, RESET + " X " + colorAfterNumberInGraph);
+         altered[Math.abs(bmi - 35)] += 1;
+      }
+
+      //makes and prints the numbers on the x-axis
+      StringBuilder numbersOnXAxis = new StringBuilder();
+      numbersOnXAxis.append("bmi");
+
+      boolean firstNumber = true;
+      for (int i = Math.min(sizeBmiChart, 10); i > 0; i--) {
+         if (firstNumber) {
+            numbersOnXAxis.append(" ".repeat(14)).append(sizeBmiChart - i + 1).append(" ".repeat(10));
+         } else {
+            numbersOnXAxis.append(" ".repeat(10)).append(sizeBmiChart - i + 1).append(" ".repeat(10));
+         }
+         firstNumber = false;
+      }
+
+      bmiChart.add(numbersOnXAxis);
+      for (StringBuilder row : bmiChart) {
+         System.out.println(row.toString());
+      }
+
+
+
+      System.out.println("Press enter to continue...");
+      Scanner scanner = new Scanner(System.in);
+      scanner.nextLine();
+   }
+
+   private void printLungCapacityChart() {
+
+      System.out.println("\n".repeat(5));
+      List<Double> lungCapacityList = currentPatient.getLongCapacityList();
+      int sizeLungList = lungCapacityList.size();
+
+      System.out.printf("Lung capacity chart %s (only the last 10 readings are shown):\n\n", currentPatient.fullName());
+
+      ArrayList<StringBuilder> lungChart = new ArrayList<>();
+      double valueOnYAxis = 6.4;
+      for (int rows = 0; rows < 24; rows++) {
+         StringBuilder line = new StringBuilder();
+
+         line.append(Math.round(valueOnYAxis * 10) / 10.0).append("|");
+         valueOnYAxis -= 0.2;
+
+         String filler = "=".repeat(210);
+         line.append(filler);
+         lungChart.add(line);
+      }
+      lungChart.add(new StringBuilder( " ".repeat(4) + "-".repeat(210)));
+
+      int lungPrintOffset = -4;
+      for (int i = Math.min(sizeLungList, 10); i > 0; i--) {
+         double b = lungCapacityList.get(sizeLungList - i);
+
+         //math.round makes the double 5.x
+         double capacity = Math.round(b * 10) / 10.0;
+         capacity = Math.floor(capacity * 5) / 5.0;
+
+         if (Double.compare(capacity, 6.4) > 0) {
+            capacity = 6.4;
+         }
+         if (Double.compare(capacity, 1.8) <= 0) {
+            capacity = 1.81;
+         }
+
+         capacity = capacity - 1.8;
+
+         double rowToBeAltered = (Math.round(capacity * 10) / 10.0) * 5.0;
+         rowToBeAltered = 23 - rowToBeAltered;
+
+         lungPrintOffset += 21;
+         int rowToBeAlteredInt = (int) rowToBeAltered;
+         lungChart.get(rowToBeAlteredInt).replace(lungPrintOffset - 1, lungPrintOffset + 2, " X ");
+
+
+         if (rowToBeAlteredInt >= 1) {
+            lungChart.get(rowToBeAlteredInt - 1).replace(lungPrintOffset - 1, lungPrintOffset + 2, "   ");
+         }
+         for (int j = rowToBeAlteredInt + 1; j < 24; j++) {
+            lungChart.get(j).replace(lungPrintOffset - 2, lungPrintOffset + 3, "  |  ");
+         }
+      }
+
+      StringBuilder numbersOnXAxis = new StringBuilder();
+      numbersOnXAxis.append("    ");
+      boolean firstNumber = true;
+      for (int i = Math.min(sizeLungList, 10); i > 0; i--) {
+         if (firstNumber) {
+            numbersOnXAxis.append(" ".repeat(13)).append(sizeLungList - i + 1).append(" ".repeat(10));
+         } else {
+            numbersOnXAxis.append(" ".repeat(10)).append(sizeLungList - i + 1).append(" ".repeat(10));
+         }
+         firstNumber = false;
+      }
+      lungChart.add(numbersOnXAxis);
+
+      for (StringBuilder sb : lungChart) {
+         System.out.println(sb.toString());
+      }
+
+      System.out.println("Press enter to continue...");
+      Scanner scanner = new Scanner(System.in);
+      scanner.nextLine();
+   }
+
+
+   private void sortPatients() {
+      System.out.println("How do you want to sort the patients?\n");
+      System.out.println("0: RETURN");
+      System.out.println("1: alphabetically (surname)");
+      System.out.println("2: alphabetically (firstname)");
+      System.out.println("3: with patient id");
+      System.out.println("\nEnter choice: ");
+
+      switch (bScan.nextInt(1, 3)) {
+         case 1 -> allPatients.getAllPatients().sort(Comparator.comparing(Patient::getSurname));
+         case 2 -> allPatients.getAllPatients().sort(Comparator.comparing(Patient::getFirstName));
+         case 3 -> allPatients.getAllPatients().sort(Comparator.comparing(Patient::getId));
+         default -> System.out.println("you did an oopsie in sortPatient switch :3");
+      }
+
+      allPatients.printPatients();
+   }
+
 
    void menu() {
       boolean nextCycle = true;
@@ -552,6 +813,12 @@ class Administration {
             case ADD_BILL -> addBillToPatient();
 
             case DISPLAY_BILLING_HISTORY -> displayBillingHistory();
+
+            case DISPLAY_BMI_CHART -> printBMIChart();
+
+            case DISPLAY_LUNG_CAPACITY_CHART -> printLungCapacityChart();
+
+            case VIEW_ALL_PATIENTS -> sortPatients();
 
             default -> System.out.format("you did an oopsie :3 [%d]\n", choice);
          }

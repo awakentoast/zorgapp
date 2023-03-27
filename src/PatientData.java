@@ -22,6 +22,10 @@ public class PatientData {
         return allPatients.get(i - 1);
     }
 
+    public ArrayList<Patient> getAllPatients() {
+        return allPatients;
+    }
+
     public int getAmountOfPatients() {
         return amountOfPatients;
     }

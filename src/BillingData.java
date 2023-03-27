@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class BillingData {
 
-    private final ArrayList<Bill> billings = new ArrayList<>();
+    private final List<Bill> billings = new ArrayList<>();
     private int amountOfBills = 0;
     private double totalCostOfBillings = 0;
 

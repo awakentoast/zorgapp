@@ -16,11 +16,14 @@ public class PrintToScreen {
         System.out.format("%d:  Remove a patient/patients\n", 7);
         System.out.format("%d:  Add bill\n", 8);
         System.out.format("%d:  Display billing history\n", 9);
+        System.out.format("%d:  Display BMI chart\n", 10);
+        System.out.format("%d:  Display Long Capacity chart\n", 11);
+        System.out.format("%d:  Sort patient list\n", 12);
 
         if (ChangeMedication) {
-            System.out.format("%d:  Add medication\n", 10);
-            System.out.format("%d:  Change medication dosage\n", 11);
-            System.out.format("%d:  Delete medication from patient\n", 12);
+            System.out.format("%d:  Add medication\n", 13);
+            System.out.format("%d:  Change medication dosage\n", 14);
+            System.out.format("%d:  Delete medication from patient\n", 15);
         }
 
         System.out.print("\nEnter #choice: ");
@@ -34,7 +37,9 @@ public class PrintToScreen {
         System.out.format("%d:  Date of Birth\n", 3);
         System.out.format("%d:  Weight\n", 4);
         System.out.format("%d:  Length\n", 5);
-        System.out.format("%d:  Everything\n", 6);
+        System.out.format("%d:  Lung capacity\n", 6);
+
+        System.out.format("%d:  Everything\n", 7);
         System.out.print("\nEnter #choice: ");
     }
 }

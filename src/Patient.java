@@ -1,19 +1,33 @@
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
-class Patient
-{
+class Patient {
    private final int id;
-   private String    surname;
-   private String    firstName;
+   private String surname;
+   private String firstName;
    private LocalDate dateOfBirth;
-   private double    weight;
-   private double    length;
+   private double weight;
+   private double length;
+   private double lungCapacity;
    private final MedicationData medicationList = new MedicationData();
    private final BillingData billings = new BillingData();
+   private final List<Double> bmiList = new ArrayList<>();
+
+   public int getId() {
+      return id;
+   }
+
+   public String getSurname() {
+      return surname;
+   }
+
+   public String getFirstName() {
+      return firstName;
+   }
+
+   private final List<Double> lungCapacityList = new ArrayList<>();
 
    public int calcAge(LocalDate born) {
       return Period.between(born, LocalDate.from(java.time.LocalDateTime.now())).getYears();
@@ -26,18 +40,23 @@ class Patient
    ////////////////////////////////////////////////////////////////////////////////
    // Constructor
    ////////////////////////////////////////////////////////////////////////////////
-   Patient(int id, String surname, String firstName, LocalDate dateOfBirth, double weight, double length) {
+
+   Patient(int id, String surname, String firstName, LocalDate dateOfBirth, double weight, double length, double lungCapacity) {
       this.id = id;
       this.surname = surname;
       this.firstName = firstName;
       this.dateOfBirth = dateOfBirth;
       this.weight = weight;
       this.length = length;
+      this.lungCapacity = lungCapacity;
+      bmiList.add(calcBMI(weight, length));
+      lungCapacityList.add(lungCapacity);
    }
 
    ////////////////////////////////////////////////////////////////////////////////
    // Display patient data.
    ////////////////////////////////////////////////////////////////////////////////
+
    void viewData(User user) {
       System.out.println();
       System.out.format("======== Patient id=%d ========\n", id);
@@ -45,8 +64,9 @@ class Patient
       System.out.format("%-17s %s\n", "firstName:", firstName);
       System.out.format("%-17s %s\n", "Date of birth:", dateOfBirth);
       System.out.format("%-17s %s\n", "Age:", calcAge(dateOfBirth));
+      System.out.format("%-17s %s L\n", "Lung capacity:", lungCapacity);
 
-      if (!Objects.equals(user.getOccupation(), "Tandarts")) {
+      if (!Objects.equals(user.getOccupation(), "Dentist")) {
          System.out.format("%-17s %.1f kg\n", "Weight: ", weight);
          System.out.format("%-17s %.1f cm\n", "Length:", length);
          System.out.format("%-17s %.1f\n", "bmi:", calcBMI(weight, length));
@@ -55,8 +75,7 @@ class Patient
       System.out.println("\nMedications:");
       if (!user.getMedicationInsightAuthorization()) {
          System.out.println("You don't have the authorization to view medication data\n");
-      }
-      else {
+      } else {
          if (medicationList.getAmountOfMedication() == 0) {
             System.out.println("no current medication administered\n");
          } else {
@@ -71,15 +90,21 @@ class Patient
    // Shorthand for a Patient's full name
    ////////////////////////////////////////////////////////////////////////////////
 
-   public String fullName() {return String.format("%s %s [%s]",  firstName, surname, dateOfBirth.toString());}
+   public String fullName() {
+      return String.format("%s %s [%s]", firstName, surname, dateOfBirth.toString());
+   }
 
-   public void setSurname(String surname) { this.surname = surname; }
+   public void setSurname(String surname) {
+      this.surname = surname;
+   }
 
    public void setLength(double length) {
       this.length = length;
    }
 
-   public void setWeight(double weight) {this.weight = weight;}
+   public void setWeight(double weight) {
+      this.weight = weight;
+   }
 
    public void setDateOfBirth(LocalDate born) {
       this.dateOfBirth = born;
@@ -87,45 +112,68 @@ class Patient
 
    public void setFirstName(String firstname) {this.firstName = firstname;}
 
+   public void setLungCapacity(double lungCapacity) {
+      this.lungCapacity = lungCapacity;
+      lungCapacityList.add(lungCapacity);
+   }
+
+   public void addBMI() {
+      bmiList.add(calcBMI(weight, length));
+   }
+
    public void addMedication(Medication medication) {
-      this.medicationList.addMedication(medication);
+      medicationList.addMedication(medication);
    }
 
    public List<Medication> getMedicationPatient() {
-      return this.medicationList.getAllMedicationData();
+      return medicationList.getAllMedicationData();
    }
 
-   public int getAmountOfMedicationPatient() { return this.medicationList.getAmountOfMedication(); }
+   public int getAmountOfMedicationPatient() {
+      return medicationList.getAmountOfMedication();
+   }
 
-   public MedicationData getMedicationList() { return this.medicationList; }
+   public MedicationData getMedicationList() {
+      return medicationList;
+   }
 
    public BillingData getBillingsPatient() {
-      return this.billings;
+      return billings;
    }
 
    public void addBill(Bill bill) {
-      this.billings.addBill(bill);
+      billings.addBill(bill);
    }
 
-
+   public void addLungCapacity(double capacity) {
+      lungCapacityList.add(capacity);
+   }
    public void printBillingHistory(User user) {
       String occupation = user.getOccupation();
       double total = 0;
 
-      for (Bill bill : this.billings.getBillings()) {
+      for (Bill bill : billings.getBillings()) {
          if (Objects.equals(bill.occupation(), occupation)) {
-            System.out.printf("%s: %f.2",bill.procedure(), bill.price());
+            System.out.printf("%s: %f.2", bill.procedure(), bill.price());
             total += bill.price();
          }
       }
       System.out.printf("\ntotal: %f.2", total);
    }
 
+   public List<Double> getLongCapacityList() {
+      return lungCapacityList;
+   }
+
+   public List<Double> getBmiList() {
+      return bmiList;
+   }
+
    public void printMedicationPatient() {
-      this.medicationList.printMedications();
+      medicationList.printMedications();
    }
 
    public void printBillingPatient(String occupation) {
-      this.billings.printBillingHistory(occupation);
+      billings.printBillingHistory(occupation);
    }
 }

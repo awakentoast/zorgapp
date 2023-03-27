@@ -123,7 +123,6 @@ class BScanner
             return numbers;
          }
 
-         //sorts the numbers array so it's nicer
          Arrays.sort(numbers);
 
          //if upperbound + 1 is chosen (all values) we need to populate our array with all the digits

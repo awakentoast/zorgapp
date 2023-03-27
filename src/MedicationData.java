@@ -3,7 +3,7 @@ import java.util.List;
 
 public class MedicationData {
 
-    private final ArrayList<Medication> medicationList = new ArrayList<>();
+    private final List<Medication> medicationList = new ArrayList<>();
     private int amountOfMedication = 0;
 
     public MedicationData() {
