@@ -108,7 +108,8 @@ class BScanner
                   goodString = false;
                   break;
                }
-            } if (goodString)  break;
+            }
+            if (goodString)  break;
          }
 
          //converts from the digits in the string into an int[]

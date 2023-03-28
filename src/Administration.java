@@ -90,8 +90,14 @@ class Administration {
       allPatients.getPatient(1).addBMI();
 
 
-//      allPatients.getPatient(1).setWeight(55);
-//      allPatients.getPatient(1).addBMI();
+      allPatients.getPatient(1).addLungCapacity(4.0);
+       allPatients.getPatient(1).addLungCapacity(1.4);
+       allPatients.getPatient(1).addLungCapacity(2.6);
+       allPatients.getPatient(1).addLungCapacity(2.5);
+       allPatients.getPatient(1).addLungCapacity(4.6);
+       allPatients.getPatient(1).addLungCapacity(3.6);
+       allPatients.getPatient(1).addLungCapacity(1.9);
+
 
       currentPatient = allPatients.getPatient(1);
       currentUser = allUsers.getUser(1);
@@ -413,7 +419,7 @@ class Administration {
          if (medicationsToBeAdded[0] != 0) {
             for (int medicationToBeAdded : medicationsToBeAdded) {
                boolean add = true;
-               for (Medication medication : currentPatient.getMedicationPatient()) {
+               for (Medication medication : currentPatient.getMedicationsPatient()) {
                   if (Objects.equals(medication.getSubstance(), allMedications.getMedication(medicationToBeAdded).getSubstance())) {
                      add = false;
                      System.out.println("You have already prescribed this medicine to the patient, you can alter the dose for the medicine.\n");
@@ -445,8 +451,7 @@ class Administration {
          }
          else if (currentPatient.getAmountOfMedicationPatient() == 1) {
             System.out.format("\nWhat do you want the new dosage to be of %s?\n", currentPatient.getMedicationList().getMedication(1).getSubstance());
-            String newDosage = bScan.nextLine();
-            currentPatient.getMedicationList().changeMedicationDosage(1, newDosage);
+            currentPatient.getMedicationList().changeMedicationDosage(1, bScan.nextLine());
          }
          else {
             System.out.println("Of which medication would you like to alter the dose?\n");
@@ -464,8 +469,7 @@ class Administration {
             if (medicationDosagesToBeAltered[0] != 0) {
                for (int j : medicationDosagesToBeAltered) {
                   System.out.format("\nWhat do you want the new dosage to be of %s?\n", currentPatient.getMedicationList().getMedication(j).getSubstance());
-                  String newDosage = bScan.nextLine();
-                  currentPatient.getMedicationList().changeMedicationDosage(j, newDosage);
+                  currentPatient.getMedicationList().changeMedicationDosage(j, bScan.nextLine());
                }
             }
          }
@@ -572,28 +576,28 @@ class Administration {
    private String getColour(int bmi) {
       //codes to make a string a certain color when printing to console,
       //                      [red,        yellow,     green,
-      String[] colorCodes = {"\033[31m", "\033[33m", "\033[32m"};
+      String[] colourCodes = {"\033[31m", "\033[33m", "\033[32m"};
 
       if (bmi > 30) {
-         return colorCodes[0];
+         return colourCodes[0];
       }
       if (bmi > 25) {
-         return colorCodes[1];
+         return colourCodes[1];
       }
       if (bmi > 20) {
-         return colorCodes[2];
+         return colourCodes[2];
       }
       if (bmi > 15) {
-         return colorCodes[1];
+         return colourCodes[1];
       }
-      return colorCodes[0];
+      return colourCodes[0];
    }
 
    private void printBMIChart() {
       List<Double> bmiList = currentPatient.getBmiList();
 
       System.out.println("\n".repeat(5));
-      ArrayList<StringBuilder> bmiChart = new ArrayList<>();
+      ArrayList<StringBuilder> bmiChart = new ArrayList<>(24);
 
       final String RESET = "\033[0m";
 
@@ -648,7 +652,7 @@ class Administration {
          String colorAfterNumberInGraph = getColour(bmi);
 
          bmiPrintOffset += 21;
-         // alter[] exists because when adding the x with trail and head for colours there are more characters placed in the string so yuo need an extra offset
+         // altered[] exists because when adding the x with trail and head for colours there are more characters placed in the string so yuo need an extra offset
          bmiChart.get(rowToBeAltered).replace(bmiPrintOffset + 9 * altered[Math.abs(bmi - 35)] - 1, bmiPrintOffset + 9 * altered[Math.abs(bmi - 35)] + 2, RESET + " X " + colorAfterNumberInGraph);
          altered[Math.abs(bmi - 35)] += 1;
       }
@@ -657,22 +661,14 @@ class Administration {
       StringBuilder numbersOnXAxis = new StringBuilder();
       numbersOnXAxis.append("bmi");
 
-      boolean firstNumber = true;
       for (int i = Math.min(sizeBmiChart, 10); i > 0; i--) {
-         if (firstNumber) {
-            numbersOnXAxis.append(" ".repeat(14)).append(sizeBmiChart - i + 1).append(" ".repeat(10));
-         } else {
-            numbersOnXAxis.append(" ".repeat(10)).append(sizeBmiChart - i + 1).append(" ".repeat(10));
-         }
-         firstNumber = false;
+         numbersOnXAxis.append(" ".repeat(10)).append(sizeBmiChart - i + 1).append(" ".repeat(10));
       }
 
       bmiChart.add(numbersOnXAxis);
       for (StringBuilder row : bmiChart) {
          System.out.println(row.toString());
       }
-
-
 
       System.out.println("Press enter to continue...");
       Scanner scanner = new Scanner(System.in);
@@ -687,7 +683,7 @@ class Administration {
 
       System.out.printf("Lung capacity chart %s (only the last 10 readings are shown):\n\n", currentPatient.fullName());
 
-      ArrayList<StringBuilder> lungChart = new ArrayList<>();
+      ArrayList<StringBuilder> lungChart = new ArrayList<>(24);
       double valueOnYAxis = 6.4;
       for (int rows = 0; rows < 24; rows++) {
          StringBuilder line = new StringBuilder();
@@ -725,12 +721,15 @@ class Administration {
          int rowToBeAlteredInt = (int) rowToBeAltered;
          lungChart.get(rowToBeAlteredInt).replace(lungPrintOffset - 1, lungPrintOffset + 2, " X ");
 
-
+         //prevents the upper range being overwritten
          if (rowToBeAlteredInt >= 1) {
             lungChart.get(rowToBeAlteredInt - 1).replace(lungPrintOffset - 1, lungPrintOffset + 2, "   ");
          }
-         for (int j = rowToBeAlteredInt + 1; j < 24; j++) {
-            lungChart.get(j).replace(lungPrintOffset - 2, lungPrintOffset + 3, "  |  ");
+
+         //prints the trail to the x-axis
+         rowToBeAlteredInt++;
+         for (; rowToBeAlteredInt < 24; rowToBeAlteredInt++) {
+            lungChart.get(rowToBeAlteredInt).replace(lungPrintOffset - 2, lungPrintOffset + 3, "  |  ");
          }
       }
 
@@ -760,15 +759,17 @@ class Administration {
    private void sortPatients() {
       System.out.println("How do you want to sort the patients?\n");
       System.out.println("0: RETURN");
-      System.out.println("1: alphabetically (surname)");
-      System.out.println("2: alphabetically (firstname)");
-      System.out.println("3: with patient id");
+      System.out.println("1: Alphabetically (surname)");
+      System.out.println("2: Alphabetically (firstname)");
+      System.out.println("3: By patient id");
+      System.out.println("4: By date of birth");
       System.out.println("\nEnter choice: ");
 
-      switch (bScan.nextInt(1, 3)) {
+      switch (bScan.nextInt(1, 4)) {
          case 1 -> allPatients.getAllPatients().sort(Comparator.comparing(Patient::getSurname));
          case 2 -> allPatients.getAllPatients().sort(Comparator.comparing(Patient::getFirstName));
          case 3 -> allPatients.getAllPatients().sort(Comparator.comparing(Patient::getId));
+         case 4 -> allPatients.getAllPatients().sort(Comparator.comparing(Patient::getDateOfBirth));
          default -> System.out.println("you did an oopsie in sortPatient switch :3");
       }
 

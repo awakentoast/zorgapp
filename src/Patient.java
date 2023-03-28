@@ -66,7 +66,7 @@ class Patient {
       System.out.format("%-17s %s\n", "Age:", calcAge(dateOfBirth));
       System.out.format("%-17s %s L\n", "Lung capacity:", lungCapacity);
 
-      if (!Objects.equals(user.getOccupation(), "Dentist")) {
+      if (!(user instanceof Dentist)) {
          System.out.format("%-17s %.1f kg\n", "Weight: ", weight);
          System.out.format("%-17s %.1f cm\n", "Length:", length);
          System.out.format("%-17s %.1f\n", "bmi:", calcBMI(weight, length));
@@ -94,21 +94,13 @@ class Patient {
       return String.format("%s %s [%s]", firstName, surname, dateOfBirth.toString());
    }
 
-   public void setSurname(String surname) {
-      this.surname = surname;
-   }
+   public void setSurname(String surname) {this.surname = surname;}
 
-   public void setLength(double length) {
-      this.length = length;
-   }
+   public void setLength(double length) {this.length = length;}
 
-   public void setWeight(double weight) {
-      this.weight = weight;
-   }
+   public void setWeight(double weight) {this.weight = weight;}
 
-   public void setDateOfBirth(LocalDate born) {
-      this.dateOfBirth = born;
-   }
+   public void setDateOfBirth(LocalDate born) {this.dateOfBirth = born;}
 
    public void setFirstName(String firstname) {this.firstName = firstname;}
 
@@ -117,37 +109,25 @@ class Patient {
       lungCapacityList.add(lungCapacity);
    }
 
-   public void addBMI() {
-      bmiList.add(calcBMI(weight, length));
-   }
+   public void addBMI() {bmiList.add(calcBMI(weight, length));}
 
-   public void addMedication(Medication medication) {
-      medicationList.addMedication(medication);
-   }
+   public void addMedication(Medication medication) {medicationList.addMedication(medication);}
 
-   public List<Medication> getMedicationPatient() {
-      return medicationList.getAllMedicationData();
-   }
+   public List<Medication> getMedicationsPatient() {return medicationList.getAllMedicationData();}
 
-   public int getAmountOfMedicationPatient() {
-      return medicationList.getAmountOfMedication();
-   }
+   public Medication getMedicationPatient(int index) {return medicationList.getMedication(index);}
 
-   public MedicationData getMedicationList() {
-      return medicationList;
-   }
+   public int getAmountOfMedicationPatient() {return medicationList.getAmountOfMedication();}
 
-   public BillingData getBillingsPatient() {
-      return billings;
-   }
+   public MedicationData getMedicationList() {return medicationList;}
 
-   public void addBill(Bill bill) {
-      billings.addBill(bill);
-   }
+   public BillingData getBillingsPatient() {return billings;}
 
-   public void addLungCapacity(double capacity) {
-      lungCapacityList.add(capacity);
-   }
+   public LocalDate getDateOfBirth() {return dateOfBirth;}
+
+   public void addBill(Bill bill) {billings.addBill(bill);}
+
+   public void addLungCapacity(double capacity) {lungCapacityList.add(capacity);}
    public void printBillingHistory(User user) {
       String occupation = user.getOccupation();
       double total = 0;
@@ -161,19 +141,21 @@ class Patient {
       System.out.printf("\ntotal: %f.2", total);
    }
 
-   public List<Double> getLongCapacityList() {
-      return lungCapacityList;
+   public List<Double> getLongCapacityList() {return lungCapacityList;}
+
+   public List<Double> getBmiList() {return bmiList;}
+
+   public void printMedicationPatient() {medicationList.printMedications();}
+
+   public void printBillingPatient(String occupation) {billings.printBillingHistory(occupation);}
+
+   public void printBMIGraph() {
+      printGraph bmiGraph = new printGraph("bmi", "date", "bmi", 14, 35, bmiList);
+      System.out.println("\n".repeat(5));
+      System.out.printf("BMI chart %s (only last 10 entered bmi are shown):\n\n", fullName());
+      bmiGraph.print();
    }
 
-   public List<Double> getBmiList() {
-      return bmiList;
-   }
 
-   public void printMedicationPatient() {
-      medicationList.printMedications();
-   }
 
-   public void printBillingPatient(String occupation) {
-      billings.printBillingHistory(occupation);
-   }
 }

@@ -21,10 +21,7 @@ public class MedicationData {
 
     public Medication getMedication(int i) {
         Medication medication = medicationList.get(i - 1);
-        String substance = medication.getSubstance();
-        String type = medication.getType();
-        String dosage = medication.getDose();
-        return new Medication(substance, type, dosage);
+        return new Medication(medication.getSubstance(), medication.getType(), medication.getDose());
     }
 
     public int getAmountOfMedication() {
