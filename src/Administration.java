@@ -48,7 +48,6 @@ class Administration {
    private final UserData allUsers = new UserData();
    private final MedicationData allMedications = new MedicationData();
 
-
    private final BScanner bScan = new BScanner();
 
 
@@ -86,9 +85,8 @@ class Administration {
       allPatients.getPatient(1).addBMI();
       allPatients.getPatient(1).setWeight(80);
       allPatients.getPatient(1).addBMI();
-      allPatients.getPatient(1).setWeight(150);
+      allPatients.getPatient(1).setWeight(5);
       allPatients.getPatient(1).addBMI();
-
 
       allPatients.getPatient(1).addLungCapacity(4.0);
        allPatients.getPatient(1).addLungCapacity(1.4);
@@ -573,188 +571,6 @@ class Administration {
       }
    }
 
-   private String getColour(int bmi) {
-      //codes to make a string a certain color when printing to console,
-      //                      [red,        yellow,     green,
-      String[] colourCodes = {"\033[31m", "\033[33m", "\033[32m"};
-
-      if (bmi > 30) {
-         return colourCodes[0];
-      }
-      if (bmi > 25) {
-         return colourCodes[1];
-      }
-      if (bmi > 20) {
-         return colourCodes[2];
-      }
-      if (bmi > 15) {
-         return colourCodes[1];
-      }
-      return colourCodes[0];
-   }
-
-   private void printBMIChart() {
-      List<Double> bmiList = currentPatient.getBmiList();
-
-      System.out.println("\n".repeat(5));
-      ArrayList<StringBuilder> bmiChart = new ArrayList<>(24);
-
-      final String RESET = "\033[0m";
-
-      int sizeBmiChart = bmiList.size();
-      int upperValueYAxis = 35;
-      for (int rows = 0; rows < 24; rows++) {
-         StringBuilder line = new StringBuilder();
-
-         if (rows % 5 == 0) {
-            line.append(upperValueYAxis).append("|");
-            upperValueYAxis -= 5;
-         } else {
-            line.append("  |");
-         }
-
-         String filler = "=".repeat(210) + RESET;
-         line.append(filler);
-         bmiChart.add(line);
-      }
-
-      bmiChart.add(new StringBuilder( " ".repeat(3) + "-".repeat(210)));
-
-      System.out.printf("BMI chart %s (only last 10 entered bmi are shown):\n\n", currentPatient.fullName());
-
-      int value = 0;
-      for (int bmi = 35; bmi >= 12; bmi--) {
-         String colorAfterNumberInGraph = getColour(bmi);
-         bmiChart.get(bmi - 35 + value).insert(3, colorAfterNumberInGraph);
-         value += 2;
-      }
-
-      int[] altered = new int[24];
-      for (int i = 0; i < 24; i++) {
-         altered[i] = 0;
-      }
-
-      int bmiPrintOffset = -3;
-      // loop for drawing the bmi on chart
-      for (int i = Math.min(sizeBmiChart, 10); i > 0; i--) {
-         double b = bmiList.get(sizeBmiChart - i);
-         int bmi = (int) Math.round(b);
-
-         int rowToBeAltered = 0;
-
-         if (bmi <= 35 - sizeBmiChart) {
-            rowToBeAltered = bmiChart.size() - 2;
-         }
-         if (bmi > 35 - sizeBmiChart - 13 && bmi < 35) {
-            rowToBeAltered = Math.abs(bmi - 35);
-         }
-
-         String colorAfterNumberInGraph = getColour(bmi);
-
-         bmiPrintOffset += 21;
-         // altered[] exists because when adding the x with trail and head for colours there are more characters placed in the string so yuo need an extra offset
-         bmiChart.get(rowToBeAltered).replace(bmiPrintOffset + 9 * altered[Math.abs(bmi - 35)] - 1, bmiPrintOffset + 9 * altered[Math.abs(bmi - 35)] + 2, RESET + " X " + colorAfterNumberInGraph);
-         altered[Math.abs(bmi - 35)] += 1;
-      }
-
-      //makes and prints the numbers on the x-axis
-      StringBuilder numbersOnXAxis = new StringBuilder();
-      numbersOnXAxis.append("bmi");
-
-      for (int i = Math.min(sizeBmiChart, 10); i > 0; i--) {
-         numbersOnXAxis.append(" ".repeat(10)).append(sizeBmiChart - i + 1).append(" ".repeat(10));
-      }
-
-      bmiChart.add(numbersOnXAxis);
-      for (StringBuilder row : bmiChart) {
-         System.out.println(row.toString());
-      }
-
-      System.out.println("Press enter to continue...");
-      Scanner scanner = new Scanner(System.in);
-      scanner.nextLine();
-   }
-
-   private void printLungCapacityChart() {
-
-      System.out.println("\n".repeat(5));
-      List<Double> lungCapacityList = currentPatient.getLongCapacityList();
-      int sizeLungList = lungCapacityList.size();
-
-      System.out.printf("Lung capacity chart %s (only the last 10 readings are shown):\n\n", currentPatient.fullName());
-
-      ArrayList<StringBuilder> lungChart = new ArrayList<>(24);
-      double valueOnYAxis = 6.4;
-      for (int rows = 0; rows < 24; rows++) {
-         StringBuilder line = new StringBuilder();
-
-         line.append(Math.round(valueOnYAxis * 10) / 10.0).append("|");
-         valueOnYAxis -= 0.2;
-
-         String filler = "=".repeat(210);
-         line.append(filler);
-         lungChart.add(line);
-      }
-      lungChart.add(new StringBuilder( " ".repeat(4) + "-".repeat(210)));
-
-      int lungPrintOffset = -4;
-      for (int i = Math.min(sizeLungList, 10); i > 0; i--) {
-         double b = lungCapacityList.get(sizeLungList - i);
-
-         //math.round makes the double 5.x
-         double capacity = Math.round(b * 10) / 10.0;
-         capacity = Math.floor(capacity * 5) / 5.0;
-
-         if (Double.compare(capacity, 6.4) > 0) {
-            capacity = 6.4;
-         }
-         if (Double.compare(capacity, 1.8) <= 0) {
-            capacity = 1.81;
-         }
-
-         capacity = capacity - 1.8;
-
-         double rowToBeAltered = (Math.round(capacity * 10) / 10.0) * 5.0;
-         rowToBeAltered = 23 - rowToBeAltered;
-
-         lungPrintOffset += 21;
-         int rowToBeAlteredInt = (int) rowToBeAltered;
-         lungChart.get(rowToBeAlteredInt).replace(lungPrintOffset - 1, lungPrintOffset + 2, " X ");
-
-         //prevents the upper range being overwritten
-         if (rowToBeAlteredInt >= 1) {
-            lungChart.get(rowToBeAlteredInt - 1).replace(lungPrintOffset - 1, lungPrintOffset + 2, "   ");
-         }
-
-         //prints the trail to the x-axis
-         rowToBeAlteredInt++;
-         for (; rowToBeAlteredInt < 24; rowToBeAlteredInt++) {
-            lungChart.get(rowToBeAlteredInt).replace(lungPrintOffset - 2, lungPrintOffset + 3, "  |  ");
-         }
-      }
-
-      StringBuilder numbersOnXAxis = new StringBuilder();
-      numbersOnXAxis.append("    ");
-      boolean firstNumber = true;
-      for (int i = Math.min(sizeLungList, 10); i > 0; i--) {
-         if (firstNumber) {
-            numbersOnXAxis.append(" ".repeat(13)).append(sizeLungList - i + 1).append(" ".repeat(10));
-         } else {
-            numbersOnXAxis.append(" ".repeat(10)).append(sizeLungList - i + 1).append(" ".repeat(10));
-         }
-         firstNumber = false;
-      }
-      lungChart.add(numbersOnXAxis);
-
-      for (StringBuilder sb : lungChart) {
-         System.out.println(sb.toString());
-      }
-
-      System.out.println("Press enter to continue...");
-      Scanner scanner = new Scanner(System.in);
-      scanner.nextLine();
-   }
-
 
    private void sortPatients() {
       System.out.println("How do you want to sort the patients?\n");
@@ -815,9 +631,9 @@ class Administration {
 
             case DISPLAY_BILLING_HISTORY -> displayBillingHistory();
 
-            case DISPLAY_BMI_CHART -> printBMIChart();
+            case DISPLAY_BMI_CHART -> currentPatient.printBMIGraph();
 
-            case DISPLAY_LUNG_CAPACITY_CHART -> printLungCapacityChart();
+            case DISPLAY_LUNG_CAPACITY_CHART -> currentPatient.printLungCapacityGraph();
 
             case VIEW_ALL_PATIENTS -> sortPatients();
 

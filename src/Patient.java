@@ -150,12 +150,24 @@ class Patient {
    public void printBillingPatient(String occupation) {billings.printBillingHistory(occupation);}
 
    public void printBMIGraph() {
-      printGraph bmiGraph = new printGraph("bmi", "date", "bmi", 14, 35, bmiList);
+      Graph bmiGraph = new BmiGraph("bmi", "date", "bmi", bmiList);
       System.out.println("\n".repeat(5));
-      System.out.printf("BMI chart %s (only last 10 entered bmi are shown):\n\n", fullName());
-      bmiGraph.print();
+      System.out.printf("BMI chart %s (only last 10 entered are shown):\n\n", fullName());
+
+      String[] lineColours = bmiGraph.getColourForLines();
+      List<StringBuilder> graph = bmiGraph.makeYAxis(lineColours);
+      graph = bmiGraph.addPointsOnGraph(graph, lineColours);
+      bmiGraph.printGraph(graph);
    }
 
+   public void printLungCapacityGraph() {
+      Graph lungCapacityGraph = new lungCapacityGraph("lung capacity", "date", "lung capacity", lungCapacityList);
+      System.out.println("\n".repeat(5));
+      System.out.printf("Lung capacity chart %s (only last 10 entered are shown):\n\n", fullName());
 
-
+      String[] lineColours = lungCapacityGraph.getColourForLines();
+      List<StringBuilder> graph = lungCapacityGraph.makeYAxis(lineColours);
+      graph = lungCapacityGraph.addPointsOnGraph(graph, lineColours);
+      lungCapacityGraph.printGraph(graph);
+   }
 }

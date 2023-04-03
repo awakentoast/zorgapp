@@ -9,7 +9,6 @@ public class BillingData {
     private double totalCostOfBillings = 0;
 
     public BillingData() {
-        //TODO why has this to be empty, feels weird
     }
 
     public int getAmountOfBills() {
