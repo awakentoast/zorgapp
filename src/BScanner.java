@@ -109,6 +109,13 @@ class BScanner
                   break;
                }
             }
+
+            //if the user types ",1", it breaks when splitting you get ""
+            if (r.charAt(0) == ',') {
+               System.out.println("Please enter a valid digit/valid digits ex. [1,2,3]:");
+               r = nextLine();
+               goodString = false;
+            }
             if (goodString)  break;
          }
 

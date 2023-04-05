@@ -115,7 +115,6 @@ class Patient {
 
    public List<Medication> getMedicationsPatient() {return medicationList.getAllMedicationData();}
 
-   public Medication getMedicationPatient(int index) {return medicationList.getMedication(index);}
 
    public int getAmountOfMedicationPatient() {return medicationList.getAmountOfMedication();}
 
@@ -141,10 +140,6 @@ class Patient {
       System.out.printf("\ntotal: %f.2", total);
    }
 
-   public List<Double> getLongCapacityList() {return lungCapacityList;}
-
-   public List<Double> getBmiList() {return bmiList;}
-
    public void printMedicationPatient() {medicationList.printMedications();}
 
    public void printBillingPatient(String occupation) {billings.printBillingHistory(occupation);}
@@ -154,20 +149,14 @@ class Patient {
       System.out.println("\n".repeat(5));
       System.out.printf("BMI chart %s (only last 10 entered are shown):\n\n", fullName());
 
-      String[] lineColours = bmiGraph.getColourForLines();
-      List<StringBuilder> graph = bmiGraph.makeYAxis(lineColours);
-      graph = bmiGraph.addPointsOnGraph(graph, lineColours);
-      bmiGraph.printGraph(graph);
+      bmiGraph.printGraph();
    }
 
    public void printLungCapacityGraph() {
-      Graph lungCapacityGraph = new lungCapacityGraph("lung capacity", "date", "lung capacity", lungCapacityList);
+      Graph lungCapacityGraph = new LungCapacityGraph("lung capacity", "date", "lung capacity", lungCapacityList);
       System.out.println("\n".repeat(5));
       System.out.printf("Lung capacity chart %s (only last 10 entered are shown):\n\n", fullName());
 
-      String[] lineColours = lungCapacityGraph.getColourForLines();
-      List<StringBuilder> graph = lungCapacityGraph.makeYAxis(lineColours);
-      graph = lungCapacityGraph.addPointsOnGraph(graph, lineColours);
-      lungCapacityGraph.printGraph(graph);
+      lungCapacityGraph.printGraph();
    }
 }
