@@ -13,21 +13,8 @@ class Patient {
    private double lungCapacity;
    private final MedicationData medicationList = new MedicationData();
    private final BillingData billings = new BillingData();
-   private final List<Double> bmiList = new ArrayList<>();
-
-   public int getId() {
-      return id;
-   }
-
-   public String getSurname() {
-      return surname;
-   }
-
-   public String getFirstName() {
-      return firstName;
-   }
-
-   private final List<Double> lungCapacityList = new ArrayList<>();
+   private final List<Double> bmiList = new ArrayList<>(List.of(26.4, 24.6, 22.5, 20.5, 18.3, 18.5, 19.8, 20.9, 22.4, 23.9));
+   private final List<Double> lungCapacityList = new ArrayList<>(List.of(6.4, 6.7, 6.5, 5.4, 5.4, 5.3, 6.1, 6.4, 6.7, 6.4));
 
    public int calcAge(LocalDate born) {
       return Period.between(born, LocalDate.from(java.time.LocalDateTime.now())).getYears();
@@ -83,12 +70,19 @@ class Patient {
             System.out.println();
          }
       }
+
+      System.out.println("Press enter to continue the program...");
+      Scanner scanner = new Scanner(System.in);
+      scanner.nextLine();
    }
 
 
-   ////////////////////////////////////////////////////////////////////////////////
-   // Shorthand for a Patient's full name
-   ////////////////////////////////////////////////////////////////////////////////
+   public int getId() {return id;}
+
+   public String getSurname() {return surname;}
+
+   public String getFirstName() {return firstName;}
+
 
    public String fullName() {
       return String.format("%s %s [%s]", firstName, surname, dateOfBirth.toString());
@@ -114,7 +108,6 @@ class Patient {
    public void addMedication(Medication medication) {medicationList.addMedication(medication);}
 
    public List<Medication> getMedicationsPatient() {return medicationList.getAllMedicationData();}
-
 
    public int getAmountOfMedicationPatient() {return medicationList.getAmountOfMedication();}
 

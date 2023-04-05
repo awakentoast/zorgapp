@@ -9,6 +9,7 @@ public class BillingData {
     private double totalCostOfBillings = 0;
 
     public BillingData() {
+        //TODO empty
     }
 
     public int getAmountOfBills() {

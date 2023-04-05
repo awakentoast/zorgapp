@@ -16,20 +16,18 @@ class Administration {
    //choices for the menu switch
    static final int STOP = 0;
    static final int VIEW = 1;
-   static final int SWAP_USER = 2;
-   static final int SWAP_PATIENT = 3;
-   static final int CHANGE_CURRENT_PATIENT_INFORMATION = 4;
-   static final int ADD_USER = 5;
-   static final int ADD_PATIENT = 6;
-   static final int DELETE_PATIENTS = 7;
-   static final int ADD_BILL = 8;
-   static final int DISPLAY_BILLING_HISTORY = 9;
-   static final int DISPLAY_BMI_CHART = 10;
-   static final int DISPLAY_LUNG_CAPACITY_CHART = 11;
-   static final int VIEW_ALL_PATIENTS = 12;
-   static final int ADD_MEDICATION = 13;
-   static final int CHANGE_MEDICATION = 14;
-   static final int DELETE_MEDICATION = 15;
+   static final int CHANGE_CURRENT_PATIENT_INFORMATION = 2;
+   static final int ADD_PATIENT = 3;
+   static final int SWAP_PATIENT = 4;
+   static final int DELETE_PATIENTS = 5;
+   static final int ADD_USER = 6;
+   static final int ADD_BILL = 7;
+   static final int DISPLAY_BILLING_HISTORY = 8;
+   static final int DISPLAY_BMI_CHART = 9;
+   static final int DISPLAY_LUNG_CAPACITY_CHART = 10;
+   static final int ADD_MEDICATION = 1;
+   static final int CHANGE_MEDICATION = 2;
+   static final int DELETE_MEDICATION = 3;
 
 
    //choices for the patient data, change the max number in change patient and add patient when adding a new field that the user inputs
@@ -62,76 +60,41 @@ class Administration {
       allUsers.addUser(new Dentist(2, "Barry Batsbak"));
       allUsers.addUser(new PhysicalTherapist(3, "Kenzo Tenma"));
 
-      allPatients.addPatient(new Patient(1, "White", "Walter", LocalDate.of(1958, 9, 7),93, 191, 3.0));
-      allPatients.addPatient(new Patient(2, "Baldy", "Caped", LocalDate.of(1997, 6, 9),10, 175, 9.0));
-      allPatients.addPatient(new Patient(3, "Duck", "Donald", LocalDate.of(1934, 6, 9),10, 130, 2.5));
-      allPatients.addPatient(new Patient(4, "Henkema", "Henk", LocalDate.of(1999, 9, 9),50, 160, 3.6));
-      allPatients.addPatient(new Patient(5, "Hat", "Straw", LocalDate.of(2004, 5, 5),64, 174, 7.4));
-
-      allPatients.getPatient(1).setWeight(100);
-      allPatients.getPatient(1).addBMI();
-      allPatients.getPatient(1).setWeight(100);
-      allPatients.getPatient(1).addBMI();
-      allPatients.getPatient(1).setWeight(100);
-      allPatients.getPatient(1).addBMI();
-      allPatients.getPatient(1).setWeight(100);
-      allPatients.getPatient(1).addBMI();
-      allPatients.getPatient(1).setWeight(100);
-      allPatients.getPatient(1).addBMI();
-
-      allPatients.getPatient(1).setWeight(80);
-      allPatients.getPatient(1).addBMI();
-      allPatients.getPatient(1).setWeight(80);
-      allPatients.getPatient(1).addBMI();
-      allPatients.getPatient(1).setWeight(80);
-      allPatients.getPatient(1).addBMI();
-      allPatients.getPatient(1).setWeight(5);
-      allPatients.getPatient(1).addBMI();
-
-      allPatients.getPatient(1).addLungCapacity(4.0);
-       allPatients.getPatient(1).addLungCapacity(1.4);
-       allPatients.getPatient(1).addLungCapacity(2.6);
-       allPatients.getPatient(1).addLungCapacity(2.5);
-       allPatients.getPatient(1).addLungCapacity(4.6);
-       allPatients.getPatient(1).addLungCapacity(3.6);
-       allPatients.getPatient(1).addLungCapacity(1.9);
-
+      allPatients.addPatient(new Patient(1, "White", "Walter", LocalDate.of(1958, 9, 7),93, 191, 6.0));
+      allPatients.addPatient(new Patient(2, "Baldy", "Caped", LocalDate.of(1997, 6, 9),10, 175, 6.0));
+      allPatients.addPatient(new Patient(3, "Duck", "Donald", LocalDate.of(1934, 6, 9),10, 130, 6.0));
+      allPatients.addPatient(new Patient(4, "Henkema", "Henk", LocalDate.of(1999, 9, 9),50, 160, 6.0));
+      allPatients.addPatient(new Patient(5, "Hat", "Straw", LocalDate.of(2004, 5, 5),64, 174, 6.0));
 
       currentPatient = allPatients.getPatient(1);
       currentUser = allUsers.getUser(1);
+
+      sortPatients();
+      flushScreen();
+      chooseUser();
    }
 
+   public void flushScreen() {
+      for (int i = 0; i < 32; i++) {
+         System.out.println();
+      }
+   }
 
    public static boolean userTypesYesOrNo(String yesOrNo) {
       return yesOrNo.equalsIgnoreCase("yes");
    }
 
-   private void swapUser() {
-      if (allUsers.getAmountOfUsers() == 0) {
-         System.out.println("There are no users, first add more users\n");
-      }
-      else if (allUsers.getAmountOfUsers() == 1) {
-            System.out.println("You are the only registered user in the system, please add more users if you would like to switch user\n");
-      }
-      else {
-         System.out.println("\nWhat user do you want to switch to?");
+   private void chooseUser() {
+      System.out.println("\nWhich user are you?\n");
 
-         System.out.println("\n0: Return");
+      allUsers.printUsers();
+      System.out.print("\nEnter #choice: ");
 
-         allUsers.printUsers();
 
-         System.out.print("\nEnter #choice: ");
+      int userToSwitchTo = bScan.nextInt(1, allUsers.getAmountOfUsers());
+      currentUser = allUsers.getUser(userToSwitchTo);
 
-         int userToSwitchTo = bScan.nextInt(1, allUsers.getAmountOfUsers());
-
-         if (userToSwitchTo == 0) {
-            System.out.println("You have chosen to not change the user");
-         }
-         else {
-            currentUser = allUsers.getUser(userToSwitchTo);
-         }
-         System.out.println();
-      }
+      System.out.println();
    }
 
 
@@ -582,29 +545,52 @@ class Administration {
 
    private void sortPatients() {
       System.out.println("How do you want to sort the patients?\n");
-      System.out.println("0: RETURN");
-      System.out.println("1: Alphabetically (surname)");
-      System.out.println("2: Alphabetically (firstname)");
-      System.out.println("3: By patient id");
+
+      System.out.println("1: I don't mind how the list is sorted");
+      System.out.println("2: Alphabetically (surname)");
+      System.out.println("3: Alphabetically (firstname)");
       System.out.println("4: By date of birth");
-      System.out.println("\nEnter choice: ");
+
+      System.out.print("\nEnter choice: ");
 
       //sorteert niet op hele naam, kan wel als je de hele naam als functie zou meegeven
-      switch (bScan.nextInt(1, 4)) {
-         case 1 -> allPatients.getAllPatients().sort(Comparator.comparing(Patient::getSurname));
-         case 2 -> allPatients.getAllPatients().sort(Comparator.comparing(Patient::getFirstName));
-         case 3 -> allPatients.getAllPatients().sort(Comparator.comparing(Patient::getId));
+      switch (bScan.nextInt(2, 4)) {
+         case 1 -> System.out.println();
+         case 2 -> allPatients.getAllPatients().sort(Comparator.comparing(Patient::getSurname));
+         case 3 -> allPatients.getAllPatients().sort(Comparator.comparing(Patient::getFirstName));
          case 4 -> allPatients.getAllPatients().sort(Comparator.comparing(Patient::getDateOfBirth));
          default -> System.out.println("you did an oopsie in sortPatient switch :3 %d");
       }
+   }
 
-      allPatients.printPatients();
+   void medicineMenu() {
+      System.out.println("What do you want to do?\n");
+      System.out.format("%d:  Return\n", 0);
+      System.out.format("%d:  Add medication\n", 1);
+      System.out.format("%d:  Change medication dosage\n", 2);
+      System.out.format("%d:  Delete medication from patient\n", 3);
+      System.out.print("\nEnter #choice: ");
+
+      int choice = bScan.nextInt(1, 3);
+      flushScreen();
+      switch (choice) {
+         case 0 -> System.out.println("Returning to menu");
+
+         case ADD_MEDICATION -> addMedication();
+
+         case CHANGE_MEDICATION -> changeMedicationDosage();
+
+         case DELETE_MEDICATION -> deleteMedication();
+
+         default -> System.out.format("you did an oopsie in medicine Menu:3 [%d]\n", choice);
+      }
    }
 
 
    void menu() {
       boolean nextCycle = true;
       while (nextCycle) {
+         flushScreen();
          System.out.format("%s\n\n", "-".repeat(60));
          System.out.format("Current user: [%d] %s (%s)\n", currentUser.getUserID(), currentUser.getUserName(), currentUser.getOccupation());
          System.out.format("Current patient: %s\n\n", currentPatient.fullName());
@@ -612,49 +598,40 @@ class Administration {
          //the choices the user has. If the user can edit medication, those options are shown, else not
          System.out.format("%d:  STOP\n", 0);
          System.out.format("%d:  View patient data\n", 1);
-         System.out.format("%d:  Change user\n", 2);
-         System.out.format("%d:  Change patient\n", 3);
-         System.out.format("%d:  Change current patient data\n", 4);
-         System.out.format("%d:  Add a user/users\n", 5);
-         System.out.format("%d:  Add a patient/patients\n", 6);
-         System.out.format("%d:  Remove a patient/patients\n", 7);
-         System.out.format("%d:  Add bill\n", 8);
-         System.out.format("%d:  Display billing history\n", 9);
-         System.out.format("%d:  Display BMI chart\n", 10);
-         System.out.format("%d:  Display Long Capacity chart\n", 11);
-         System.out.format("%d:  Sort patient list\n", 12);
+         System.out.format("%d:  Change current patient data\n", 2);
+         System.out.format("%d:  Add a patient/patients\n", 3);
+         System.out.format("%d:  Change patient\n", 4);
+         System.out.format("%d:  Remove a patient/patients\n", 5);
+         System.out.format("%d:  Add a user/users\n", 6);
+         System.out.format("%d:  Add bill\n", 7);
+         System.out.format("%d:  Display billing history\n", 8);
+         System.out.format("%d:  Display BMI chart\n", 9);
+         System.out.format("%d: Display Long Capacity chart\n", 10);
 
+         int upperBound = 10;
          if (currentUser.getMedicationEditingAuthorization()) {
-            System.out.format("%d:  Add medication\n", 13);
-            System.out.format("%d:  Change medication dosage\n", 14);
-            System.out.format("%d:  Delete medication from patient\n", 15);
+            System.out.format("%d: Medication menu\n", 11);
+            upperBound = 11;
          }
 
          System.out.print("\nEnter #choice: ");
 
-         int choice = bScan.nextInt(1, DELETE_MEDICATION);
+         int choice = bScan.nextInt(1, upperBound);
+         flushScreen();
          switch (choice) {
             case STOP -> nextCycle = false; // interrupts the loop
 
             case VIEW -> currentPatient.viewData(currentUser);
 
-            case SWAP_USER -> swapUser();
-
             case SWAP_PATIENT -> swapPatient();
-
-            case CHANGE_CURRENT_PATIENT_INFORMATION -> changePatientData();
-
-            case ADD_USER -> addUser();
 
             case ADD_PATIENT -> addPatient();
 
+            case CHANGE_CURRENT_PATIENT_INFORMATION -> changePatientData();
+
             case DELETE_PATIENTS -> deletePatients();
 
-            case ADD_MEDICATION -> addMedication();
-
-            case CHANGE_MEDICATION -> changeMedicationDosage();
-
-            case DELETE_MEDICATION -> deleteMedication();
+            case ADD_USER -> addUser();
 
             case ADD_BILL -> addBillToPatient();
 
@@ -664,9 +641,9 @@ class Administration {
 
             case DISPLAY_LUNG_CAPACITY_CHART -> currentPatient.printLungCapacityGraph();
 
-            case VIEW_ALL_PATIENTS -> sortPatients();
+            case 11 -> medicineMenu();
 
-            default -> System.out.format("you did an oopsie :3 [%d]\n", choice);
+            default -> System.out.format("you did an oopsie in menu:3 [%d]\n", choice);
          }
       }
    }

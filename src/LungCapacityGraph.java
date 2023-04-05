@@ -12,7 +12,7 @@ public class LungCapacityGraph extends Graph
         String[] colourCodes = {"\033[31m", "\033[33m", "\033[32m"};
         for (int i = 0; i < 24; i++) {
             //maps i ot lung capacity
-            double lungCapacity = 1.8 + i * 0.2;
+            double lungCapacity = valuesYGraph[i];
             if (lungCapacity > 5.0) {
                 colourForLines[i] = colourCodes[2];
             } else if (lungCapacity > 3.0) {

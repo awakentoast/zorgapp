@@ -78,18 +78,16 @@ public abstract class Graph {
 
         int offset = -1;
         for (int i = Math.min(sizeList, 10); i > 0 ; i--) {
-            double value = Math.round(values.get(sizeList - i));
-
+            double value = values.get(sizeList - i);
+            System.out.println(value);
             if (value > upperY) {
                 value = upperY;
             }
             if (value < lowerY) {
                 value = lowerY;
             }
-
+            System.out.println(value);
             offset += 21;
-            System.out.println(lowerY + " " + upperY +  " "+ yIncrement);
-            System.out.println(value +" "+ ((value - lowerY) / yIncrement));
             int rowToBeAltered = (int) Math.floor((value - lowerY) / yIncrement);
             graphLines.get(rowToBeAltered).replace(offset - 1 + 9 * amountLineAltered[rowToBeAltered], offset + 2 + 9  * amountLineAltered[rowToBeAltered], RESET + " X " + colourForLines[rowToBeAltered]);
             amountLineAltered[rowToBeAltered] += 1;
