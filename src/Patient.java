@@ -13,8 +13,8 @@ class Patient {
    private double lungCapacity;
    private final MedicationData medicationList = new MedicationData();
    private final BillingData billings = new BillingData();
-   private final List<Double> bmiList = new ArrayList<>(List.of(26.4, 24.6, 22.5, 20.5, 18.3, 18.5, 19.8, 20.9, 22.4, 23.9));
-   private final List<Double> lungCapacityList = new ArrayList<>(List.of(6.4, 6.7, 6.5, 5.4, 5.4, 5.3, 6.1, 6.4, 6.7, 6.4));
+   private final List<Double> bmiList = new ArrayList<>(List.of(24.6, 22.5, 20.5, 18.3, 18.5, 19.8, 20.9, 22.4, 23.9));
+   private final List<Double> lungCapacityList = new ArrayList<>(List.of(6.7, 6.5, 5.4, 5.4, 5.3, 6.1, 6.4, 6.7, 6.4));
 
    public int calcAge(LocalDate born) {
       return Period.between(born, LocalDate.from(java.time.LocalDateTime.now())).getYears();
@@ -50,7 +50,7 @@ class Patient {
       System.out.format("%-17s %s\n", "Surname:", surname);
       System.out.format("%-17s %s\n", "firstName:", firstName);
       System.out.format("%-17s %s\n", "Date of birth:", dateOfBirth);
-      System.out.format("%-17s %s\n", "Age:", calcAge(dateOfBirth));
+      System.out.format("%-17s %s jaar\n", "Age:", calcAge(dateOfBirth));
       System.out.format("%-17s %s L\n", "Lung capacity:", lungCapacity);
 
       if (!(user instanceof Dentist)) {
@@ -67,14 +67,9 @@ class Patient {
             System.out.println("no current medication administered\n");
          } else {
             medicationList.printMedications();
-            System.out.println();
          }
       }
-
-      System.out.println("Press enter to continue the program...");
-      Scanner scanner = new Scanner(System.in);
-      scanner.nextLine();
-   }
+}
 
 
    public int getId() {return id;}
@@ -105,7 +100,7 @@ class Patient {
 
    public void addBMI() {bmiList.add(calcBMI(weight, length));}
 
-   public void addMedication(Medication medication) {medicationList.addMedication(medication);}
+   public void addMedicationPatient(Medication medication) {medicationList.addMedication(medication);}
 
    public List<Medication> getMedicationsPatient() {return medicationList.getAllMedicationData();}
 
@@ -118,20 +113,6 @@ class Patient {
    public LocalDate getDateOfBirth() {return dateOfBirth;}
 
    public void addBill(Bill bill) {billings.addBill(bill);}
-
-   public void addLungCapacity(double capacity) {lungCapacityList.add(capacity);}
-   public void printBillingHistory(User user) {
-      String occupation = user.getOccupation();
-      double total = 0;
-
-      for (Bill bill : billings.getBillings()) {
-         if (Objects.equals(bill.occupation(), occupation)) {
-            System.out.printf("%s: %f.2", bill.procedure(), bill.price());
-            total += bill.price();
-         }
-      }
-      System.out.printf("\ntotal: %f.2", total);
-   }
 
    public void printMedicationPatient() {medicationList.printMedications();}
 
