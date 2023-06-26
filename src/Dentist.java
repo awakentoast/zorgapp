@@ -4,7 +4,9 @@ public class Dentist extends User {
     }
 
     @Override
-    public String getOccupation() { return "Dentist"; }
+    public String getOccupation() {
+        return "Dentist";
+    }
 
     @Override
     public boolean getMedicationEditingAuthorization() {

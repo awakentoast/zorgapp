@@ -26,6 +26,7 @@ public abstract class Graph {
         this.label = label;
         this.xAxis = xAxis;
         this.yAxis = yAxis;
+
         this.lowerY = Math.floor(Collections.min(values));
         this.upperY = Math.ceil(Collections.max(values));
         this.values = values;
