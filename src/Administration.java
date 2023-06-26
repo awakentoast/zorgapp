@@ -621,7 +621,7 @@ class Administration {
          System.out.format("%d:  Add a user/users\n", ADD_USER);
          System.out.format("%d:  Add bill\n", ADD_BILL);
          System.out.format("%d:  Display billing history\n", DISPLAY_BILLING_HISTORY);
-         System.out.format("%d:  Display BMI chart\n", DISPLAY_BMI_CHART);
+         System.out.format("%d: Display BMI chart\n", DISPLAY_BMI_CHART);
          System.out.format("%d: Display Long Capacity chart\n", DISPLAY_LUNG_CAPACITY_CHART);
 
          int upperBound = DISPLAY_LUNG_CAPACITY_CHART;
