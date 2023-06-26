@@ -25,7 +25,7 @@ public class BillingData {
     }
 
     public void printAllBillsWithIndexWithoutDate() {
-        int count = 0;
+        int count = 1;
         for (Bill bill : billings) {
             count += 1;
             System.out.printf("%d: %s  € %.2f\n", count, bill.procedure(), bill.price());

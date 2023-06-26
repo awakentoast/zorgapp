@@ -1,11 +1,12 @@
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author luukb
  */
 public class PatientData {
 
-    private final ArrayList<Patient> allPatients = new ArrayList<>();
+    private final List<Patient> allPatients = new ArrayList<>();
     private int amountOfPatients = 0;
 
 
@@ -22,7 +23,7 @@ public class PatientData {
         return allPatients.get(i - 1);
     }
 
-    public ArrayList<Patient> getAllPatients() {
+    public List<Patient> getAllPatients() {
         return allPatients;
     }
 
@@ -36,7 +37,7 @@ public class PatientData {
     }
 
     public void printPatients() {
-        int i = 0;
+        int i = 1;
         for (Patient patient : allPatients) {
             i++;
             System.out.format("%d: %s\n", i, patient.fullName());

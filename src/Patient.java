@@ -119,7 +119,6 @@ class Patient {
 
    public void addBill(Bill bill) {billings.addBill(bill);}
 
-   public void addLungCapacity(double capacity) {lungCapacityList.add(capacity);}
    public void printBillingHistory(User user) {
       String occupation = user.getOccupation();
       double total = 0;

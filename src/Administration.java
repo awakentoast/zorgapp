@@ -14,20 +14,21 @@ import java.util.*;
 class Administration {
 
    //choices for the menu switch
-   static final int STOP = 0;
-   static final int VIEW = 1;
-   static final int CHANGE_CURRENT_PATIENT_INFORMATION = 2;
-   static final int ADD_PATIENT = 3;
-   static final int SWAP_PATIENT = 4;
-   static final int DELETE_PATIENTS = 5;
-   static final int ADD_USER = 6;
-   static final int ADD_BILL = 7;
-   static final int DISPLAY_BILLING_HISTORY = 8;
-   static final int DISPLAY_BMI_CHART = 9;
-   static final int DISPLAY_LUNG_CAPACITY_CHART = 10;
-   static final int ADD_MEDICATION = 1;
-   static final int CHANGE_MEDICATION = 2;
-   static final int DELETE_MEDICATION = 3;
+   static final int STOP = 1;
+   static final int VIEW = 2;
+   static final int CHANGE_CURRENT_PATIENT_INFORMATION = 3;
+   static final int ADD_PATIENT = 4;
+   static final int SWAP_PATIENT = 5;
+   static final int DELETE_PATIENTS = 6;
+   static final int ADD_USER = 7;
+   static final int ADD_BILL = 8;
+   static final int DISPLAY_BILLING_HISTORY = 9;
+   static final int DISPLAY_BMI_CHART = 10;
+   static final int DISPLAY_LUNG_CAPACITY_CHART = 11;
+
+   static final int ADD_MEDICATION = 2;
+   static final int CHANGE_MEDICATION = 3;
+   static final int DELETE_MEDICATION = 4;
 
 
    //choices for the patient data, change the max number in change patient and add patient when adding a new field that the user inputs
@@ -72,6 +73,7 @@ class Administration {
       sortPatients();
       flushScreen();
       chooseUser();
+      menu();
    }
 
    public void flushScreen() {
@@ -80,8 +82,12 @@ class Administration {
       }
    }
 
-   public static boolean userTypesYesOrNo(String yesOrNo) {
-      return yesOrNo.equalsIgnoreCase("yes");
+   public boolean userTypesYesOrNo() {
+      System.out.println("\nType the corresponding number");
+      System.out.println("1: Yes");
+      System.out.println("2: No");
+      int answer = bScan.nextInt(1, 2);
+      return answer == 1;
    }
 
    private void chooseUser() {
@@ -108,13 +114,14 @@ class Administration {
       else {
          System.out.println("\nWhat patient do you want to switch to?\n");
 
-         System.out.println("0: Return");
+         System.out.println("1: Return");
 
          allPatients.printPatients();
 
          System.out.print("\nEnter choice: ");
 
-         int patientToSwitchTo = bScan.nextInt(1, allPatients.getAmountOfPatients());
+         int patientToSwitchTo = bScan.nextInt(1, allPatients.getAmountOfPatients() + 1);
+         patientToSwitchTo -= 1;
          if (patientToSwitchTo == 0) {
             System.out.println("You have chosen to not change the patient");
          }
@@ -129,13 +136,13 @@ class Administration {
    private void addUser() {
       System.out.println("How many users do you want to add?");
 
-      int amountOfAddedUsers = bScan.nextInt(1, 1000000000);
+      int amountOfAddedUsers = bScan.nextInt(0, 1000000000);
 
       // prevents multiple calls being made when more than 1 user is added
       int size = allPatients.getAmountOfPatients();
       System.out.format("\nAre you sure you want to add %d amount of users\n", amountOfAddedUsers);
-      System.out.println("yes/no");
-      if (!userTypesYesOrNo(bScan.nextLine()) || amountOfAddedUsers == 0) {
+
+      if (!userTypesYesOrNo() || amountOfAddedUsers == 0) {
          System.out.println("You have chosen not to add any users\n");
       }
       else {
@@ -167,9 +174,8 @@ class Administration {
          }
 
          System.out.println("\nDo you want the newly added user to be the current user?");
-         System.out.println("yes/no");
 
-         if (!userTypesYesOrNo(bScan.nextLine())) {
+         if (!userTypesYesOrNo()) {
             System.out.println("You have chosen not to change the current user\n");
          } else {
             currentUser = allUsers.getUser(allUsers.getAmountOfUsers());
@@ -180,15 +186,25 @@ class Administration {
 
    private void changePatientData() {
 
-      //prints the choices for the user
-      PrintToScreen.printPatientParameters();
+      System.out.println("\nType the corresponding number(s) of the data you would like to change; if there are multiple numbers, divide them with a comma ex. 4,5,6 (you cant choose 0 and 6 with other digits):\n");
+      System.out.format("%d:  Return\n", 1);
+      System.out.format("%d:  Surname\n", 2);
+      System.out.format("%d:  First Name\n", 3);
+      System.out.format("%d:  Date of Birth\n", 4);
+      System.out.format("%d:  Weight\n", 5);
+      System.out.format("%d:  Length\n", 6);
+      System.out.format("%d:  Lung capacity\n", 7);
+
+      System.out.format("%d:  Everything\n", 8);
+      System.out.print("\nEnter #choice: ");
 
       //prevents for anything but integers and 1,2 integers being passed along
-      int[] fieldsToBeChanged = bScan.nextInts(1, LUNG_CAPACITY);
+      int[] fieldsToBeChanged = bScan.nextInts(2, LUNG_CAPACITY + 1);
 
       //done with a boolean, so you don't change the mbi twice if the patients length and weight get changed at once
       boolean changeInBMI = false;
       for (int fieldToBeChanged : fieldsToBeChanged) {
+         fieldToBeChanged -= 1;
          if (fieldToBeChanged == LENGTH || fieldToBeChanged == WEIGHT)
          {
             changeInBMI = true;
@@ -257,8 +273,8 @@ class Administration {
       int size = allPatients.getAmountOfPatients();
 
       System.out.format("\nAre you sure you want to add %d amount of users\n", amountOfAddedPatients);
-      System.out.println("yes/no");
-      if (!userTypesYesOrNo(bScan.nextLine()) || amountOfAddedPatients == 0) {
+
+      if (!userTypesYesOrNo() || amountOfAddedPatients == 0) {
          System.out.println("\nYou have chosen not to add any patients\n");
       }
       else {
@@ -299,9 +315,9 @@ class Administration {
                System.out.println("You are not authorized to add any medication");
             } else {
                System.out.println("Does the patient use any medication?");
-               System.out.println("yes/no");
+
                currentPatient = allPatients.getPatient(allPatients.getAmountOfPatients());
-               if (userTypesYesOrNo(bScan.nextLine())) {
+               if (userTypesYesOrNo()) {
                   addMedication();
                }
                else {
@@ -311,9 +327,8 @@ class Administration {
          }
 
          System.out.println("Do you want the newly added patient to be the current patient?");
-         System.out.println("yes/no");
 
-         if (!userTypesYesOrNo(bScan.nextLine())) {
+         if (!userTypesYesOrNo()) {
             System.out.println("You have chosen not to change the current patient\n");
          } else {
             currentPatient = allPatients.getPatient(allPatients.getAmountOfPatients());
@@ -326,24 +341,23 @@ class Administration {
 
       System.out.println("Type the corresponding number(s) of the patients you would like to delete; if there are multiple , divide them with a comma ex. 1,2,3:\n");
 
-      System.out.println("0: Return");
+      System.out.println("1: Return");
 
       allPatients.printPatients();
 
-      System.out.format("%d: All patients\n", allPatients.getAmountOfPatients() + 1);
+      System.out.format("%d: All patients\n", allPatients.getAmountOfPatients() + 2);
       System.out.print("\nEnter #choice:");
 
-      int[] usersToBeDeleted = bScan.nextInts(1, allPatients.getAmountOfPatients());
+      int[] usersToBeDeleted = bScan.nextInts(2, allPatients.getAmountOfPatients() + 1);
 
       // 0 is return, so it circumvents the deletion
-      if (usersToBeDeleted[0] == 0) {
+      if (usersToBeDeleted[0] == 1) {
          System.out.println("You have chosen not to delete any patients");
       } else {
          //makes sure the user doesn't haphazardly delete patients
          System.out.println("\nAre you sure if you want to delete the patient(s)?");
-         System.out.println("yes/no");
 
-         if (!userTypesYesOrNo(bScan.nextLine())) {
+         if (!userTypesYesOrNo()) {
             System.out.println("you didn't type yes so the patient(s) won't be deleted");
          } else {
             //reverses the numbers, so we don't get index errors when deleting multiple patients at once
@@ -353,8 +367,9 @@ class Administration {
                usersToBeDeleted[usersToBeDeleted.length - j - 1] = temp;
             }
 
-            for (int k : usersToBeDeleted) {
-               allPatients.deletePatient(k);
+            for (int userToBeDeleted : usersToBeDeleted) {
+               userToBeDeleted -= 1;
+               allPatients.deletePatient(userToBeDeleted);
             }
          }
       }
@@ -372,21 +387,22 @@ class Administration {
       } else {
          System.out.println("What medication would you like to add? Type the corresponding number(s) of the medication you would like to change; if there are multiple numbers, divide them with a comma ex. 1,2,3 (you cant choose 0 and \"all of them\" with other digits):\n");
 
-         System.out.println("0: Add nothing and return");
-         int i = 0;
+         System.out.println("1: Add nothing and return");
+         int i = 1;
          for (Medication medication : allMedications.getAllMedicationData()) {
             i++;
             System.out.format("%d: %s (%s)\n", i, medication.getSubstance(), medication.getType());
          }
-         System.out.format("%d: Add all of the medication\n", allMedications.getAmountOfMedication() + 1);
+         System.out.format("%d: Add all of the medication\n", allMedications.getAmountOfMedication() + 2);
 
          System.out.print("\nEnter Choice: ");
-         int[] medicationsToBeAdded = bScan.nextInts(1,allMedications.getAmountOfMedication());
+         int[] medicationsToBeAdded = bScan.nextInts(2, allMedications.getAmountOfMedication() + 1);
 
          System.out.println();
 
-         if (medicationsToBeAdded[0] != 0) {
+         if (medicationsToBeAdded[0] != 1) {
             for (int medicationToBeAdded : medicationsToBeAdded) {
+               medicationToBeAdded -= 1;
                boolean add = true;
                for (Medication medication : currentPatient.getMedicationsPatient()) {
                   if (Objects.equals(medication.getSubstance(), allMedications.getMedication(medicationToBeAdded).getSubstance())) {
@@ -402,6 +418,7 @@ class Administration {
                   Medication medication = allMedications.getMedication(medicationToBeAdded);
                   medication.setDose(medicationPrescription);
                   currentPatient.addMedication(medication);
+
                   System.out.println();
                }
             }
@@ -425,18 +442,19 @@ class Administration {
          else {
             System.out.println("Of which medication would you like to alter the dose?\n");
 
-            System.out.println("0: Don't change anything\n");
+            System.out.println("1: Don't change anything\n");
 
             currentPatient.printMedicationPatient();
 
-            System.out.format("%d: Change the dosage of all of them\n", currentPatient.getAmountOfMedicationPatient() + 1);
+            System.out.format("%d: Change the dosage of all of them\n", currentPatient.getAmountOfMedicationPatient() + 2);
 
             System.out.print("\nEnter choice: ");
 
-            int[] medicationDosagesToBeAltered = bScan.nextInts(1, currentPatient.getAmountOfMedicationPatient());
+            int[] medicationDosagesToBeAltered = bScan.nextInts(2, currentPatient.getAmountOfMedicationPatient() + 1);
 
-            if (medicationDosagesToBeAltered[0] != 0) {
+            if (medicationDosagesToBeAltered[0] != 1) {
                for (int j : medicationDosagesToBeAltered) {
+                  j -= 1;
                   System.out.format("\nWhat do you want the new dosage to be of %s?\n", currentPatient.getMedicationList().getMedication(j).getSubstance());
                   currentPatient.getMedicationList().changeMedicationDosage(j, bScan.nextLine());
                }
@@ -451,8 +469,7 @@ class Administration {
          System.out.println("\nThere is no medication to delete, first prescribe medication\n");
       } else if (currentPatient.getAmountOfMedicationPatient() == 1) {
          System.out.format("\nWould you like to delete %s?\n", currentPatient.getMedicationList().getMedication(1).getSubstance());
-         System.out.println("yes/no");
-         if (userTypesYesOrNo(bScan.nextLine())) {
+         if (userTypesYesOrNo()) {
             currentPatient.getMedicationList().deleteMedication(1);
          }
          else {
@@ -462,22 +479,21 @@ class Administration {
       else {
          System.out.println("What medication would you like to delete? Type the corresponding number(s) of the medication you would like to change; if there are multiple numbers, divide them with a comma ex. 1,2,3 (you cant choose 0 and \"all of them\" with other digits):\n");
 
-         System.out.println("0: Delete nothing and return");
+         System.out.println("1: Delete nothing and return");
 
          currentPatient.printMedicationPatient();
 
-         System.out.format("%d: Delete all of the medication\n", currentPatient.getAmountOfMedicationPatient() + 1);
+         System.out.format("%d: Delete all of the medication\n", currentPatient.getAmountOfMedicationPatient() + 2);
 
          System.out.print("\nEnter Choice: ");
 
 
-         int[] medicationsToBeDeleted = bScan.nextInts(1, currentPatient.getAmountOfMedicationPatient());
+         int[] medicationsToBeDeleted = bScan.nextInts(2, currentPatient.getAmountOfMedicationPatient() + 1);
 
-         if (medicationsToBeDeleted[0] != 0) {
+         if (medicationsToBeDeleted[0] != 1) {
             System.out.println("Are you sure if you want to delete the medication(s)?");
-            System.out.println("yes/no");
 
-            if (!userTypesYesOrNo(bScan.nextLine())) {
+            if (!userTypesYesOrNo()) {
                System.out.println("you didn't type yes so the medication(s) won't be deleted");
             } else {
                //reverses the numbers, so we don't get index errors when deleting multiple medications at once
@@ -486,8 +502,9 @@ class Administration {
                   medicationsToBeDeleted[j] = medicationsToBeDeleted[medicationsToBeDeleted.length - j - 1];
                   medicationsToBeDeleted[medicationsToBeDeleted.length - j - 1] = temp;
                }
-               for (int k : medicationsToBeDeleted) {
-                  currentPatient.getMedicationList().deleteMedication(k);
+               for (int medicationToBeDeleted : medicationsToBeDeleted) {
+                  medicationToBeDeleted -= 1;
+                  currentPatient.getMedicationList().deleteMedication(medicationToBeDeleted);
                }
             }
          }
@@ -499,21 +516,20 @@ class Administration {
 
       System.out.println("\nWhich procedure(s) would you like to bill the patient Type the corresponding number(s) of the procedure you would like to bill; if there are multiple numbers, divide them with a comma ex. 1,2,3 (you cant choose 0 and \\\"all of them\\\" with other digits)?\n");
 
-      System.out.println("0: Return");
+      System.out.println("1: Return");
       currentUser.getListOfBillingsForOccupation().printAllBillsWithIndexWithoutDate();
-      System.out.format("%d: Bill all procedures\n", currentUser.getListOfBillingsForOccupation().getAmountOfBills() + 1);
+      System.out.format("%d: Bill all procedures\n", currentUser.getListOfBillingsForOccupation().getAmountOfBills() + 2);
 
       System.out.print("\nEnter choice: ");
-      int[] billsToBeAdded =  bScan.nextInts(1, currentUser.getListOfBillingsForOccupation().getAmountOfBills());
+      int[] billsToBeAdded =  bScan.nextInts(2, currentUser.getListOfBillingsForOccupation().getAmountOfBills() + 1);
 
       System.out.println("Are you sure you want to bill these bills to the patient");
-      System.out.println("yes/no");
 
-      String yesOrNo = bScan.nextLine();
-      if (billsToBeAdded[0] != 0 && userTypesYesOrNo(yesOrNo)) {
+      boolean yesOrNo = userTypesYesOrNo();
+      if (billsToBeAdded[0] != 1 && yesOrNo) {
          for (int billToBeAdded : billsToBeAdded) {
+            billToBeAdded -= 1;
             Bill bill = currentUser.getListOfBillingsForOccupation().getBill(billToBeAdded);
-            System.out.println(bill.price());
             Bill tempBill = null;
             switch (bill.occupation()) {
                case "Dentist" -> tempBill = Bill.dentistBill(bill.procedure(), bill.price(), LocalDate.from(java.time.LocalDateTime.now()));
@@ -524,7 +540,7 @@ class Administration {
             currentPatient.addBill(tempBill);
          }
       }
-      if (!userTypesYesOrNo(yesOrNo)) {
+      if (!yesOrNo) {
          System.out.println("You have chosen not to bill the patient");
       }
       System.out.println();
@@ -554,7 +570,7 @@ class Administration {
       System.out.print("\nEnter choice: ");
 
       //sorteert niet op hele naam, kan wel als je de hele naam als functie zou meegeven
-      switch (bScan.nextInt(2, 4)) {
+      switch (bScan.nextInt(1, 4)) {
          case 1 -> System.out.println();
          case 2 -> allPatients.getAllPatients().sort(Comparator.comparing(Patient::getSurname));
          case 3 -> allPatients.getAllPatients().sort(Comparator.comparing(Patient::getFirstName));
@@ -565,16 +581,16 @@ class Administration {
 
    void medicineMenu() {
       System.out.println("What do you want to do?\n");
-      System.out.format("%d:  Return\n", 0);
-      System.out.format("%d:  Add medication\n", 1);
-      System.out.format("%d:  Change medication dosage\n", 2);
-      System.out.format("%d:  Delete medication from patient\n", 3);
+      System.out.format("%d:  Return\n", STOP);
+      System.out.format("%d:  Add medication\n", ADD_MEDICATION);
+      System.out.format("%d:  Change medication dosage\n", CHANGE_MEDICATION);
+      System.out.format("%d:  Delete medication from patient\n", DELETE_MEDICATION);
       System.out.print("\nEnter #choice: ");
 
-      int choice = bScan.nextInt(1, 3);
+      int choice = bScan.nextInt(1, 4);
       flushScreen();
       switch (choice) {
-         case 0 -> System.out.println("Returning to menu");
+         case STOP -> System.out.println("Returning to menu");
 
          case ADD_MEDICATION -> addMedication();
 
@@ -588,30 +604,30 @@ class Administration {
 
 
    void menu() {
-      boolean nextCycle = true;
-      while (nextCycle) {
+      boolean programHasBeenStopped = false;
+      while (!programHasBeenStopped) {
          flushScreen();
          System.out.format("%s\n\n", "-".repeat(60));
          System.out.format("Current user: [%d] %s (%s)\n", currentUser.getUserID(), currentUser.getUserName(), currentUser.getOccupation());
          System.out.format("Current patient: %s\n\n", currentPatient.fullName());
 
          //the choices the user has. If the user can edit medication, those options are shown, else not
-         System.out.format("%d:  STOP\n", 0);
-         System.out.format("%d:  View patient data\n", 1);
-         System.out.format("%d:  Change current patient data\n", 2);
-         System.out.format("%d:  Add a patient/patients\n", 3);
-         System.out.format("%d:  Change patient\n", 4);
-         System.out.format("%d:  Remove a patient/patients\n", 5);
-         System.out.format("%d:  Add a user/users\n", 6);
-         System.out.format("%d:  Add bill\n", 7);
-         System.out.format("%d:  Display billing history\n", 8);
-         System.out.format("%d:  Display BMI chart\n", 9);
-         System.out.format("%d: Display Long Capacity chart\n", 10);
+         System.out.format("%d:  STOP\n", STOP);
+         System.out.format("%d:  View patient data\n", VIEW);
+         System.out.format("%d:  Change current patient data\n", CHANGE_CURRENT_PATIENT_INFORMATION);
+         System.out.format("%d:  Add a patient/patients\n", ADD_PATIENT);
+         System.out.format("%d:  Change patient\n", SWAP_PATIENT);
+         System.out.format("%d:  Remove a patient/patients\n", DELETE_PATIENTS);
+         System.out.format("%d:  Add a user/users\n", ADD_USER);
+         System.out.format("%d:  Add bill\n", ADD_BILL);
+         System.out.format("%d:  Display billing history\n", DISPLAY_BILLING_HISTORY);
+         System.out.format("%d:  Display BMI chart\n", DISPLAY_BMI_CHART);
+         System.out.format("%d: Display Long Capacity chart\n", DISPLAY_LUNG_CAPACITY_CHART);
 
-         int upperBound = 10;
+         int upperBound = DISPLAY_LUNG_CAPACITY_CHART;
          if (currentUser.getMedicationEditingAuthorization()) {
-            System.out.format("%d: Medication menu\n", 11);
-            upperBound = 11;
+            System.out.format("%d: Medication menu\n", 12);
+            upperBound = 12;
          }
 
          System.out.print("\nEnter #choice: ");
@@ -619,7 +635,7 @@ class Administration {
          int choice = bScan.nextInt(1, upperBound);
          flushScreen();
          switch (choice) {
-            case STOP -> nextCycle = false; // interrupts the loop
+            case STOP -> programHasBeenStopped = true; // interrupts the loop
 
             case VIEW -> currentPatient.viewData(currentUser);
 
@@ -641,7 +657,7 @@ class Administration {
 
             case DISPLAY_LUNG_CAPACITY_CHART -> currentPatient.printLungCapacityGraph();
 
-            case 11 -> medicineMenu();
+            case 12 -> medicineMenu();
 
             default -> System.out.format("you did an oopsie in menu:3 [%d]\n", choice);
          }

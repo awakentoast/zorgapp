@@ -54,7 +54,7 @@ class BScanner
          {
             System.out.println( "please enter integer" );
          }
-         if (r >= lowerBound - 1 && r <= upperBound) {
+         if (r >= lowerBound && r <= upperBound) {
             return r;
          }
          System.out.format("Please enter valid input between %d and %d\n", lowerBound, upperBound);
@@ -110,8 +110,8 @@ class BScanner
                }
             }
 
-            //if the user types ",1", it breaks when splitting you get ""
-            if (r.charAt(0) == ',') {
+            //if the user types ",1" or "1,", it breaks when splitting you get ""
+            if (r.charAt(0) == ',' || r.charAt(r.length() - 1) == ',') {
                System.out.println("Please enter a valid digit/valid digits ex. [1,2,3]:");
                r = nextLine();
                goodString = false;
@@ -126,8 +126,8 @@ class BScanner
             numbers[i] = Integer.parseInt(numbersString[i]);
          }
 
-         //if there is only 1 number, we can just check if it in bounds
-         if (numbers.length == 1 && numbers[0] >= lowerBound - 1 && numbers[0] <= upperBound) {
+         //if there is only 1 number, we can just check if it is in bounds
+         if (numbers.length == 1 && numbers[0] >= lowerBound && numbers[0] <= upperBound) {
             return numbers;
          }
 
@@ -135,11 +135,11 @@ class BScanner
 
          //if upperbound + 1 is chosen (all values) we need to populate our array with all the digits
          if (numbers[0] == upperBound + 1 && numbers.length == 1) {
-            int[] intArray = new int[upperBound];
-            for (int i = 1; i <= upperBound; i++) {
-               intArray[i - 1] = i;
+            int[] intArray = new int[upperBound - 1];
+            for (int i = 0; i <= upperBound - lowerBound; i++) {
+               intArray[i] = i + 2;
             }
-            numbers = Arrays.copyOf(intArray, upperBound);
+            numbers = Arrays.copyOf(intArray, upperBound - 1);
             return numbers;
          }
 
@@ -151,7 +151,6 @@ class BScanner
             }
          }
 
-         //checks for upperbound and lowerbound in array, as they are return and add all
          if (correct == numbers.length) {
             return numbers;
          } else {

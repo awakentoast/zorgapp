@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class MedicationData {
@@ -42,7 +43,7 @@ public class MedicationData {
     }
 
     public void printMedications() {
-        int i = 0;
+        int i = 1;
         for (Medication medication : medicationList) {
             i++;
             System.out.format("%d: Substance: %s\n", i, medication.getSubstance());

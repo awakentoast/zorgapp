@@ -16,13 +16,9 @@
 
    public abstract String getOccupation();
 
-   public boolean getMedicationEditingAuthorization() {
-      return true;
-   }
+   public abstract boolean getMedicationEditingAuthorization();
 
-   public boolean getMedicationInsightAuthorization() {
-      return true;
-   }
+   public abstract boolean getMedicationInsightAuthorization();
 
    public abstract BillingData getListOfBillingsForOccupation();
 
