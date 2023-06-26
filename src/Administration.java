@@ -25,6 +25,8 @@ class Administration {
    static final int DISPLAY_BILLING_HISTORY = 9;
    static final int DISPLAY_BMI_CHART = 10;
    static final int DISPLAY_LUNG_CAPACITY_CHART = 11;
+   static final int MEDICINE_MENU = 12;
+   
 
    static final int ADD_MEDICATION = 2;
    static final int CHANGE_MEDICATION = 3;
@@ -657,7 +659,7 @@ class Administration {
 
             case DISPLAY_LUNG_CAPACITY_CHART -> currentPatient.printLungCapacityGraph();
 
-            case 12 -> medicineMenu();
+            case MEDICINE_MENU -> medicineMenu();
 
             default -> System.out.format("you did an oopsie in menu:3 [%d]\n", choice);
          }
